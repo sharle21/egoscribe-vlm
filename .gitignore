@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Wrong dataset (EgoDex mistake, see things-i-learned.md) — 16GB, do not commit
+egodex_test.zip
+
+# Ego-Exo4D downloads — pulled fresh via `egoexo` CLI, not project source
+data/ego-exo4d/
+data/converted/
+
+# training outputs
+saved_egoscribe_adapters/

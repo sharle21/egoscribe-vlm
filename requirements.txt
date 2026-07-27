@@ -1,0 +1,13 @@
+torch
+torchvision
+pillow
+transformers
+peft
+accelerate
+bitsandbytes
+unsloth
+eva-decord
+opencv-python
+pydantic
+sglang
+tqdm
