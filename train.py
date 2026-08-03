@@ -9,8 +9,10 @@ from tqdm import tqdm
 # Import our custom pipeline from our directory layout
 from src.dataset import EgocentricHOIDataset
 
-# ADR-0001: model choice open, currently leaning Qwen2.5-VL for Unsloth support.
-MODEL_ID = "unsloth/Qwen2.5-VL-7B-Instruct-bnb-4bit"
+# ADR-0001: Qwen2.5-VL selected — verified Unsloth support for the partial-tuning switches
+# ADR-0002 depends on. "unsloth-bnb-4bit" (not plain "bnb-4bit") is Unsloth's Dynamic quant:
+# better accuracy for <10% more VRAM.
+MODEL_ID = "unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit"
 
 # ADR-0002: the 4 partial-tuning strategies under comparison. Each maps directly onto
 # Unsloth's per-component finetune switches, so the training loop below is identical across
