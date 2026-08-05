@@ -101,9 +101,12 @@ def main():
         attention_mask = torch.stack([item["attention_mask"] for item in batch])
         labels = torch.stack([item["labels"] for item in batch])
 
-        # Pixel values from video sequences require flexible stacking depending on model implementation
-        pixel_values = torch.stack([item["pixel_values"] for item in batch])
-        image_grid_thw = torch.stack([item["image_grid_thw"] for item in batch]) if "image_grid_thw" in batch[0] else None
+        # Qwen2.5-VL flattens all image patches across the whole batch into one tensor
+        # (images can have different patch counts), with image_grid_thw tracking per-image
+        # grid dims in that same flat ordering — so these must be concatenated, not stacked
+        # into a new batch dimension, or grid_thw.tolist() unpacks the wrong shape downstream.
+        pixel_values = torch.cat([item["pixel_values"] for item in batch], dim=0)
+        image_grid_thw = torch.cat([item["image_grid_thw"] for item in batch], dim=0) if "image_grid_thw" in batch[0] else None
 
         batch_dict = {
             "input_ids": input_ids,
