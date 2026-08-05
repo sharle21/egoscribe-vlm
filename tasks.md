@@ -24,8 +24,9 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       Colab runs), so `Accelerator()` had no `mixed_precision` set and nothing enforced
       consistent dtype outside LoRA-wrapped layers. Fixed by setting `mixed_precision`
       explicitly in code (`train.py`), independent of how the script is launched.
-- [ ] Rerun C, then run D — confirm `trainable params` differs meaningfully across all 4
-      (catches a config not actually being applied)
+- [x] All 4 strategies (A/B/C/D) smoke-tested clean on Colab T4. Trainable params: A=51.5M
+      (0.62%), B=11.2M (0.13%), C=40.4M (0.48%), D=14.0M (0.17%) — all distinct, no config
+      collisions. Phase 0 complete.
 
 ## Phase 1 — Data
 - [ ] Confirm Ego-Exo4D license/access is actually granted
