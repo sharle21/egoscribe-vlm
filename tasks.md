@@ -5,11 +5,14 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 0 — Setup & code fixes
 - [ ] `egodex_test.zip` (17GB, local) is the wrong dataset — confirm safe to delete once
       Ego-Exo4D access/download is sorted, to free disk space
-- [~] Resolve model choice ([ADR-0001](adr/0001-model-selection.md)) — leaning Qwen2.5-VL, not fully closed
+- [x] Resolve model choice ([ADR-0001](adr/0001-model-selection.md)) — Qwen2.5-VL-7B-Instruct, accepted
+- [ ] Update `serve.py` (SGLang path + `model_path`) from MiMo-VL to Qwen2.5-VL to match ADR-0001
 - [x] Fix label masking bug: pad `labels` with `-100`, not tokenizer pad id (`src/dataset.py`)
 - [x] Switch `train.py` model loading from full BF16 to 4-bit QLoRA via Unsloth (`--strategy` flag implements ADR-0002 + ADR-0003)
 - [x] Add Unsloth + bitsandbytes to `requirements.txt`
-- [ ] `pip install -r requirements.txt` in a real GPU env and confirm Unsloth actually loads `unsloth/Qwen2.5-VL-7B-Instruct-bnb-4bit`
+- [x] Fix `data/samples/annotations.json` path mismatch (was at `data/annotations.json`, code expects it under `data/samples/`)
+- [x] Delete stale `data/inspect_meta.py` (leftover from the EgoDex/Apple mistake, reads HDF5 — irrelevant now)
+- [ ] `pip install -r requirements.txt` in a real GPU env and confirm Unsloth actually loads `unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit`
 - [ ] Prototype end-to-end pipeline on toy `data/samples/` on free tier (Colab/Kaggle) — confirm it runs before spending money, run all 4 `--strategy` values once each on the toy set as a smoke test
 
 ## Phase 1 — Data
