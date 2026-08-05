@@ -14,9 +14,11 @@ from src.dataset import EgocentricHOIDataset
 # better accuracy for <10% more VRAM.
 MODEL_ID = "unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit"
 
-# ADR-0002: the 4 partial-tuning strategies under comparison. Each maps directly onto
-# Unsloth's per-component finetune switches, so the training loop below is identical across
-# strategies — only this config changes.
+# ADR-0002: the 4 partial-tuning strategies under comparison. Unsloth's 4 switches are TWO
+# independent axes, not 4 independent toggles: finetune_{vision,language}_layers picks WHICH
+# layers are in scope, finetune_{attention,mlp}_modules picks WHAT within that scope — at least
+# one flag on each axis must be True or Unsloth raises "No modules to finetune" (caught during
+# the Colab smoke test: B and D's original configs each zeroed out one whole axis).
 STRATEGY_CONFIGS = {
     "A": dict(  # Full LoRA — baseline / upper bound on trainable params
         finetune_vision_layers=True,
@@ -27,20 +29,20 @@ STRATEGY_CONFIGS = {
     "B": dict(  # Vision-encoder only — does the domain gap live in *seeing* egocentric frames?
         finetune_vision_layers=True,
         finetune_language_layers=False,
-        finetune_attention_modules=False,
-        finetune_mlp_modules=False,
+        finetune_attention_modules=True,
+        finetune_mlp_modules=True,
     ),
     "C": dict(  # Language-decoder only — does it live in describing/reasoning over what's seen?
         finetune_vision_layers=False,
         finetune_language_layers=True,
-        finetune_attention_modules=False,
-        finetune_mlp_modules=False,
-    ),
-    "D": dict(  # Attention + MLP hybrid — cheaper than A, more expressive than B/C
-        finetune_vision_layers=False,
-        finetune_language_layers=False,
         finetune_attention_modules=True,
         finetune_mlp_modules=True,
+    ),
+    "D": dict(  # Attention-only, both modalities — cheaper than A (no MLP), broader than B/C
+        finetune_vision_layers=True,
+        finetune_language_layers=True,
+        finetune_attention_modules=True,
+        finetune_mlp_modules=False,
     ),
 }
 
