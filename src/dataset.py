@@ -49,12 +49,25 @@ class EgocentricHOIDataset(Dataset):
         video_frames = vr.get_batch(frame_indices).asnumpy()
         
         # 2. Build the system prompt forcing the JSON schema
-        prompt = (
-            "<image>\nAnalyze this egocentric video sequence. "
-            "Identify the active tool, target object, action verb, "
-            "and whether a permanent point-of-no-return state change has occurred. "
-            "Output your final answer strictly adhering to this JSON schema."
-        )
+        # NOTE: must go through apply_chat_template, not a hand-written "<image>\n" string —
+        # that literal text isn't a real special token, so the processor never inserts actual
+        # image-placeholder tokens and the vision features have nowhere to slot in
+        # (fails downstream with "Image features and image tokens do not match").
+        # apply_chat_template emits one placeholder per {"type": "image"} entry, which the
+        # processor then expands to match each frame's real patch count.
+        messages = [{
+            "role": "user",
+            "content": [{"type": "image"} for _ in range(len(video_frames))] + [{
+                "type": "text",
+                "text": (
+                    "Analyze this egocentric video sequence. "
+                    "Identify the active tool, target object, action verb, "
+                    "and whether a permanent point-of-no-return state change has occurred. "
+                    "Output your final answer strictly adhering to this JSON schema."
+                )
+            }]
+        }]
+        prompt = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         
         # 3. Format the data using the VLM's native multimodal processor
         # This converts text to token IDs and frames into normalized pixel tensors
