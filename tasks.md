@@ -10,6 +10,7 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] Fix label masking bug: pad `labels` with `-100`, not tokenizer pad id (`src/dataset.py`)
 - [x] Switch `train.py` model loading from full BF16 to 4-bit QLoRA via Unsloth (`--strategy` flag implements ADR-0002 + ADR-0003)
 - [x] Add Unsloth + bitsandbytes to `requirements.txt`
+- [x] Split `requirements.txt` into `requirements-train.txt` / `requirements-serve.txt` — `sglang`/`flashinfer` (serving-only) was blocking training installs with a fragile CUDA source build
 - [x] Fix `data/samples/annotations.json` path mismatch (was at `data/annotations.json`, code expects it under `data/samples/`)
 - [x] Delete stale `data/inspect_meta.py` (leftover from the EgoDex/Apple mistake, reads HDF5 — irrelevant now)
 - [ ] `pip install -r requirements.txt` in a real GPU env and confirm Unsloth actually loads `unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit`
