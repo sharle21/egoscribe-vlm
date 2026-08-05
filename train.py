@@ -59,6 +59,12 @@ def parse_args():
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--lr", type=float, default=2e-5)
     parser.add_argument("--num_frames", type=int, default=8, help="Lower for small-VRAM smoke tests")
+    parser.add_argument(
+        "--gradient_checkpointing", type=str, default="unsloth", choices=["unsloth", "true", "false"],
+        help="'false' works around a dtype-mismatch bug (frozen vision layer weight vs "
+             "activation dtype) that only surfaces when a whole component is untouched by LoRA "
+             "(e.g. Strategy C) — costs more VRAM since it disables the forward-recompute path.",
+    )
     return parser.parse_args()
 
 
@@ -85,6 +91,7 @@ def main():
     )
 
     # 3. Apply the strategy-specific partial-tuning LoRA config (ADR-0002).
+    gc_arg = {"unsloth": "unsloth", "true": True, "false": False}[args.gradient_checkpointing]
     model = FastVisionModel.get_peft_model(
         model,
         r=16,
@@ -92,6 +99,7 @@ def main():
         lora_dropout=0.05,
         bias="none",
         random_state=3407,
+        use_gradient_checkpointing=gc_arg,
         **strategy_config,
     )
 
