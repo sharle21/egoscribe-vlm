@@ -56,6 +56,7 @@ def parse_args():
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--lr", type=float, default=2e-5)
+    parser.add_argument("--num_frames", type=int, default=8, help="Lower for small-VRAM smoke tests")
     return parser.parse_args()
 
 
@@ -92,7 +93,7 @@ def main():
         json_metadata_path="data/samples/annotations.json",
         video_dir="data/samples/",
         processor=processor,
-        num_frames=8
+        num_frames=args.num_frames
     )
 
     # Simple, highly explicit collator to gather multimodal dictionaries into uniform batches
