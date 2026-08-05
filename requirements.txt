@@ -1,13 +1,5 @@
-torch
-torchvision
-pillow
-transformers
-peft
-accelerate
-bitsandbytes
-unsloth
-eva-decord
-opencv-python
-pydantic
-sglang
-tqdm
+# Split by concern so a training env never has to fight sglang/flashinfer's
+# CUDA source build, which is only needed for serving (serve.py), not training (train.py).
+# See requirements-train.txt / requirements-serve.txt.
+-r requirements-train.txt
+-r requirements-serve.txt
