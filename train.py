@@ -2,7 +2,7 @@
 import argparse
 import torch
 from torch.utils.data import DataLoader
-from unsloth import FastVisionModel
+from unsloth import FastVisionModel, is_bfloat16_supported
 from accelerate import Accelerator
 from tqdm import tqdm
 
@@ -61,9 +61,9 @@ def parse_args():
     parser.add_argument("--num_frames", type=int, default=8, help="Lower for small-VRAM smoke tests")
     parser.add_argument(
         "--gradient_checkpointing", type=str, default="unsloth", choices=["unsloth", "true", "false"],
-        help="'false' works around a dtype-mismatch bug (frozen vision layer weight vs "
-             "activation dtype) that only surfaces when a whole component is untouched by LoRA "
-             "(e.g. Strategy C) — costs more VRAM since it disables the forward-recompute path.",
+        help="Standard VRAM/speed tradeoff. Leave default unless you need to debug — a prior "
+             "dtype-mismatch bug looked checkpointing-related but was actually a missing "
+             "mixed_precision setting on the Accelerator (see main()).",
     )
     return parser.parse_args()
 
@@ -72,18 +72,25 @@ def main():
     args = parse_args()
     strategy_config = STRATEGY_CONFIGS[args.strategy]
 
-    # 1. Initialize the HF Accelerate Environment
-    accelerator = Accelerator(gradient_accumulation_steps=2)
+    # 1. Initialize the HF Accelerate Environment.
+    # mixed_precision is set explicitly here, not left to config/accelerate_config.yaml, because
+    # that file only applies when the script is launched via `accelerate launch --config_file
+    # ...` — running `python train.py` directly (e.g. in a Colab cell) silently ignores it and
+    # falls back to Accelerate's own default (no autocast at all). Without autocast, nothing
+    # forces consistent dtype outside of LoRA-wrapped layers (PEFT casts its own inputs
+    # internally) — frozen, non-LoRA layers (e.g. Strategy C's untouched vision encoder) can
+    # end up with float32 activations hitting bfloat16 weights and crash. Use Unsloth's own
+    # is_bfloat16_supported(), not torch.cuda.is_bf16_supported() — they disagreed on T4
+    # (torch says yes, Unsloth's own banner says no) and Unsloth's is the one that matches what
+    # its model loading actually does.
+    compute_dtype = torch.bfloat16 if is_bfloat16_supported() else torch.float16
+    accelerator = Accelerator(
+        gradient_accumulation_steps=2,
+        mixed_precision="bf16" if compute_dtype == torch.bfloat16 else "fp16",
+    )
 
     # 2. Load the Processor & Base Model already 4-bit quantized (ADR-0003).
     # This is what makes a run fit a rented 24GB card instead of needing full BF16 headroom.
-    # dtype must be picked explicitly, not left to Unsloth's default: on hardware without real
-    # bf16 tensor cores (e.g. T4, compute capability 7.5), the 4-bit weights' dequant compute
-    # dtype can end up bf16 while frozen/untouched layers' activations fall back to float32 —
-    # this only bites strategies that leave a whole component untouched (e.g. Strategy C,
-    # vision layers frozen with no LoRA), since layers WITH LoRA adapters get a consistent
-    # cast path forced on them regardless.
-    compute_dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
     model, processor = FastVisionModel.from_pretrained(
         MODEL_ID,
         load_in_4bit=True,
