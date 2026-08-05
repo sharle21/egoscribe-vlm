@@ -55,4 +55,31 @@ expensive to fix after you've built a pipeline around the wrong schema."
 
 ---
 
+## 2026-08-05 — Unsloth's partial-tuning switches are two axes, not four independent toggles
+
+**What happened:** Designed 4 ablation strategies (ADR-0002) assuming
+`finetune_vision_layers`/`finetune_language_layers`/`finetune_attention_modules`/
+`finetune_mlp_modules` were 4 independent on/off flags. Strategy B ("vision only") set
+`finetune_vision_layers=True` and left the other 3 `False` — including both module-type flags.
+On the Colab smoke test this raised `RuntimeError: No modules to finetune`. Strategy D had the
+mirror-image bug (both layer-scope flags `False`).
+
+**What I learned:** The 4 flags are really 2 independent axes — WHICH layers (vision/language)
+crossed with WHAT within them (attention/MLP modules) — and at least one flag on *each* axis
+must be `True`, or there's nothing to select regardless of the other axis. "Vision only" isn't
+`vision_layers=True, everything else False` — it's `vision_layers=True, language_layers=False,
+attention_modules=True, mlp_modules=True` (full expressiveness, scoped to vision). This also
+meant D's original definition was internally contradictory once I fixed the semantics — I
+redefined it as attention-only across both modalities, a real fourth point instead of
+duplicating A.
+
+**Interview answer:** "I designed a 2x2-style config space without realizing it was actually
+2x2 — I'd mentally modeled 4 independent switches. Running it against the real API surfaced
+the error immediately: two of my four planned strategies were malformed and would have
+silently trained nothing, or in D's case, secretly duplicated the baseline. It's a good example
+of why I run configs against the real training loop early, on a toy dataset, before trusting
+the design on paper."
+
+---
+
 ## (add entries here as the project progresses)
