@@ -82,4 +82,33 @@ the design on paper."
 
 ---
 
+## 2026-08-05 — A config file that silently does nothing (accelerate launch vs plain python)
+
+**What happened:** Strategy C crashed with a dtype mismatch (`mat1 and mat2 must have the same
+dtype, but got Float and BFloat16`) deep in the frozen vision encoder's attention layer, only
+during the backward pass. First two fix attempts were reasonable but wrong: (1) pinning an
+explicit `dtype` on model load, (2) disabling gradient checkpointing (the crash happened inside
+its recompute path, so it looked implicated). Neither fixed it — same error, same line, twice.
+Root cause: `config/accelerate_config.yaml` sets `mixed_precision: bf16`, but that file is only
+read when the script is launched via `accelerate launch --config_file ...`. The actual command
+being run was plain `python train.py` (a Colab cell) — so `Accelerator()` silently fell back to
+its own default (`mixed_precision: no`), and the config file did nothing at all. Without
+autocast, nothing forces consistent dtype outside of LoRA-wrapped layers (PEFT casts its own
+inputs internally on the layers it wraps) — Strategy A and B "worked" by accident, because both
+happened to LoRA-wrap the vision encoder; Strategy C was the first to leave it fully frozen,
+exposing the gap.
+
+**What I learned:** A correctly-written config file is not the same as a config file that's
+actually being read. When a fix "should" work and doesn't, check whether the mechanism meant to
+apply it is even in the execution path — not just whether the setting itself is correct. Two
+failed fixes in a row on the same error is itself a signal to step back and question the whole
+diagnosis, not just try a third variant of the same theory.
+
+**Interview answer:** "A crash pointed at gradient checkpointing, and I spent two fix attempts
+chasing that theory before realizing the actual bug was upstream — a config file that looked
+correct but was never being loaded, because of how the script was invoked. It's a reminder to
+verify a fix's mechanism is actually active before trusting that it should have worked."
+
+---
+
 ## (add entries here as the project progresses)

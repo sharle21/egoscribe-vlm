@@ -18,7 +18,14 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] Fix prompt: use `processor.apply_chat_template` for image placeholders, not a literal `"<image>"` string (wasn't a real special token — 0 placeholder tokens ever inserted)
 - [x] Fix labels: concatenate prompt+answer into one sequence with prompt masked `-100`, instead of two independently-tokenized/padded sequences of different lengths
 - [x] Strategy A smoke test passed on Colab T4 (`--num_frames 4 --epochs 1 --batch_size 1`) — loss 3.09→2.68 over 3 steps, checkpoint saved
-- [ ] Run B/C/D smoke tests the same way — confirm `trainable params` differs meaningfully across all 4 (catches a config not actually being applied)
+- [x] Strategy A, B smoke tests passed. Strategy C hit a dtype crash (float32 activation vs
+      bf16 weight in the frozen vision encoder) — root cause: `config/accelerate_config.yaml`
+      only applies via `accelerate launch --config_file ...`, not plain `python train.py` (what
+      Colab runs), so `Accelerator()` had no `mixed_precision` set and nothing enforced
+      consistent dtype outside LoRA-wrapped layers. Fixed by setting `mixed_precision`
+      explicitly in code (`train.py`), independent of how the script is launched.
+- [ ] Rerun C, then run D — confirm `trainable params` differs meaningfully across all 4
+      (catches a config not actually being applied)
 
 ## Phase 1 — Data
 - [ ] Confirm Ego-Exo4D license/access is actually granted
