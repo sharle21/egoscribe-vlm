@@ -1,7 +1,7 @@
 # ADR-0001: Model selection
 
-Status: Proposed (leaning Qwen2.5-VL-7B-Instruct)
-Date: 2026-07-24
+Status: Accepted
+Date: 2026-07-29
 
 ## Context
 
@@ -10,14 +10,22 @@ Date: 2026-07-24
 backbone, but the choice was never deliberate. `serve.py` also targets MiMo-VL via SGLang.
 
 Choosing the QLoRA backend (Unsloth — [ADR-0003](0003-quantization-qlora.md)) narrows this:
-Unsloth's best-tested vision fine-tuning support is for Qwen2.5-VL specifically.
+Unsloth's best-tested vision fine-tuning support is for Qwen2.5-VL specifically. Checked
+web-search-confirmed evidence (2026-07-28): `unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit`
+is a real, published model on HuggingFace, and Unsloth's vision fine-tuning docs explicitly
+document the `finetune_vision_layers`/`finetune_language_layers`/`finetune_attention_modules`/
+`finetune_mlp_modules` switches ADR-0002's strategy set depends on, for this model. Newer
+Qwen3-VL/Qwen3.5-VL models are also Unsloth-supported in 2026, but the same partial-tuning
+switches were not confirmed documented for them specifically — since the whole ablation
+methodology depends on those switches working per-strategy, the less-verified newer models
+weren't worth the risk for this project.
 
 ## Decision
 
-Lean **Qwen2.5-VL-7B-Instruct** unless a concrete reason to prefer MiMo-VL surfaces
-(e.g. MiMo-VL's native `<think>` reasoning traces turn out to matter for the
-`point_of_no_return_detected` field). Not fully closed — revisit once Unsloth support for
-MiMo-VL is checked directly.
+**Qwen2.5-VL-7B-Instruct**, loaded via `unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit`
+(Unsloth's "Dynamic" 4-bit quant — better accuracy than plain `bnb-4bit` for <10% more VRAM).
+Not MiMo-VL — dropped since it would mean re-verifying Unsloth's partial-tuning switch support
+from scratch with less community precedent, for a project already convergent on Qwen2.5-VL.
 
 ## Consequences
 
