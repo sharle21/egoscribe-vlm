@@ -71,9 +71,17 @@ def main():
 
     # 2. Load the Processor & Base Model already 4-bit quantized (ADR-0003).
     # This is what makes a run fit a rented 24GB card instead of needing full BF16 headroom.
+    # dtype must be picked explicitly, not left to Unsloth's default: on hardware without real
+    # bf16 tensor cores (e.g. T4, compute capability 7.5), the 4-bit weights' dequant compute
+    # dtype can end up bf16 while frozen/untouched layers' activations fall back to float32 —
+    # this only bites strategies that leave a whole component untouched (e.g. Strategy C,
+    # vision layers frozen with no LoRA), since layers WITH LoRA adapters get a consistent
+    # cast path forced on them regardless.
+    compute_dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
     model, processor = FastVisionModel.from_pretrained(
         MODEL_ID,
         load_in_4bit=True,
+        dtype=compute_dtype,
     )
 
     # 3. Apply the strategy-specific partial-tuning LoRA config (ADR-0002).
