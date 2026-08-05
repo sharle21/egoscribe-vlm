@@ -13,8 +13,12 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] Split `requirements.txt` into `requirements-train.txt` / `requirements-serve.txt` — `sglang`/`flashinfer` (serving-only) was blocking training installs with a fragile CUDA source build
 - [x] Fix `data/samples/annotations.json` path mismatch (was at `data/annotations.json`, code expects it under `data/samples/`)
 - [x] Delete stale `data/inspect_meta.py` (leftover from the EgoDex/Apple mistake, reads HDF5 — irrelevant now)
-- [ ] `pip install -r requirements.txt` in a real GPU env and confirm Unsloth actually loads `unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit`
-- [ ] Prototype end-to-end pipeline on toy `data/samples/` on free tier (Colab/Kaggle) — confirm it runs before spending money, run all 4 `--strategy` values once each on the toy set as a smoke test
+- [x] `pip install -r requirements-train.txt` on Colab T4, confirmed Unsloth loads `unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit`
+- [x] Fix collator: `torch.cat` not `torch.stack` for `pixel_values`/`image_grid_thw` (Qwen2.5-VL flattens image patches across the batch, doesn't stack per-sample)
+- [x] Fix prompt: use `processor.apply_chat_template` for image placeholders, not a literal `"<image>"` string (wasn't a real special token — 0 placeholder tokens ever inserted)
+- [x] Fix labels: concatenate prompt+answer into one sequence with prompt masked `-100`, instead of two independently-tokenized/padded sequences of different lengths
+- [x] Strategy A smoke test passed on Colab T4 (`--num_frames 4 --epochs 1 --batch_size 1`) — loss 3.09→2.68 over 3 steps, checkpoint saved
+- [ ] Run B/C/D smoke tests the same way — confirm `trainable params` differs meaningfully across all 4 (catches a config not actually being applied)
 
 ## Phase 1 — Data
 - [ ] Confirm Ego-Exo4D license/access is actually granted
