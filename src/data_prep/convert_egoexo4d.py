@@ -109,14 +109,24 @@ def main():
 
     video_root = Path(args.video_root)
     output_records = []
-    stats = {"takes_seen": 0, "takes_missing_ego_video": 0, "takes_missing_video_file": 0, "segments_converted": 0, "segments_skipped_bad_video": 0}
+    stats = {
+        "takes_seen": 0,
+        "takes_not_in_takes_json": 0,  # has keystep annotations but missing from takes.json
+        "takes_wrong_scenario": 0,
+        "takes_missing_ego_video": 0,
+        "takes_missing_video_file": 0,
+        "segments_converted": 0,
+        "segments_skipped_bad_video": 0,
+    }
 
     for take_uid, take_anno in annotations_by_take.items():
         stats["takes_seen"] += 1
         take = takes.get(take_uid)
         if take is None:
+            stats["takes_not_in_takes_json"] += 1
             continue
         if args.scenario and take.get("scenario") != args.scenario:
+            stats["takes_wrong_scenario"] += 1
             continue
 
         rel_path = find_egocentric_relative_path(take)
