@@ -33,6 +33,8 @@ from pathlib import Path
 
 import anthropic
 
+from src.schema import HandObjectInteraction
+
 MODEL = "claude-haiku-4-5-20251001"
 
 EXTRACTION_TOOL = {
@@ -120,7 +122,13 @@ def extract_one(client, model, step_name, step_description, narrations, max_retr
             )
             for block in response.content:
                 if block.type == "tool_use":
-                    return block.input
+                    # Validate through the actual schema, not just trust the tool call —
+                    # normalizes optional fields (e.g. tool_detected) to an explicit null when
+                    # Claude omits the key rather than returning null, so every cached record
+                    # has the same JSON shape as every other (matters since dataset.py trains
+                    # on json.dumps(expected_output) verbatim — inconsistent shape across
+                    # examples would give the model a noisier target to learn).
+                    return HandObjectInteraction(**block.input).model_dump()
             raise ValueError("No tool_use block in response")
         except (anthropic.RateLimitError, anthropic.APIStatusError) as e:
             if attempt == max_retries - 1:
