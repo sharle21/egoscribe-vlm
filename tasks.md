@@ -115,8 +115,15 @@ strategies for real, on the curated Ego-Exo4D subset (Phase 1, done).
       free-trial credit (upgraded to paid billing to unlock GPU access, no charge yet)
 - [~] Setting up GCP VM: `gcloud compute instances create egoscribe-l4` (G2, L4, PyTorch image,
       100GB disk) — walking through gcloud CLI install/auth/VM creation/SSH
-- [ ] On the VM: clone repo, `pip install -r requirements-train.txt`, pull curated dataset +
-      video (either re-run `egoexo --uids <30 curated uids>` on the VM, or transfer from local)
+- [x] Pinned `torch==2.11.0` / `transformers==5.5.0` / `unsloth==2026.8.4` in
+      `requirements-train.txt` — exact versions confirmed clean across all 4 strategies on the
+      Colab smoke test, so the GCP VM doesn't silently pull newer versions that could
+      reintroduce a bug we already fixed around.
+- [ ] On the VM: clone repo, `pip install -r requirements-train.txt` — CHECK first whether this
+      conflicts with the Deep Learning VM image's pre-installed torch (matched to its own CUDA
+      build); may need `--no-deps` on torch or to trust the image's preinstalled version instead
+      of reinstalling. Pull curated dataset + video (either re-run `egoexo --uids <30 curated
+      uids>` on the VM, or transfer from local).
 - [ ] Benchmark Strategy A for ~15-20 min — get real steps/sec, extrapolate real time/cost for
       all 4 strategies before committing to full runs (training-time estimate so far is a rough
       guess extrapolated from Colab T4, could be off 2x either way)

@@ -1,11 +1,15 @@
-torch
+# torch/transformers/unsloth pinned to the exact versions confirmed working across all 4
+# strategy smoke tests on Colab T4 (2026-08) — don't bump without re-running the smoke test,
+# a newer unsloth/transformers could reintroduce a bug we already fixed around (e.g. the
+# collator/apply_chat_template/mixed_precision fixes were version-specific behavior).
+torch==2.11.0
+transformers==5.5.0
+unsloth==2026.8.4
 torchvision
 pillow
-transformers
 peft
 accelerate
 bitsandbytes
-unsloth
 eva-decord
 pydantic
 tqdm
