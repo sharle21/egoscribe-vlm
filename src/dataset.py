@@ -5,6 +5,33 @@ from torch.utils.data import Dataset
 from decord import VideoReader, cpu
 import json
 
+# The single source of truth for the user prompt. Training (this file) and the eval harness
+# (src/eval/evaluate.py) MUST feed the model the identical prompt, or eval measures a
+# distribution the model was never trained on. serve.py uses a different, richer prompt on
+# purpose (interactive demo); the eval path deliberately does NOT.
+USER_PROMPT_TEXT = (
+    "Analyze this egocentric video sequence. "
+    "Identify the active tool, target object, action verb, "
+    "and whether a permanent point-of-no-return state change has occurred. "
+    "Output your final answer strictly adhering to this JSON schema."
+)
+
+
+def build_user_messages(num_images):
+    """Chat-template messages: one {"type":"image"} placeholder per frame, then the prompt."""
+    return [{
+        "role": "user",
+        "content": [{"type": "image"} for _ in range(num_images)] + [
+            {"type": "text", "text": USER_PROMPT_TEXT}
+        ],
+    }]
+
+
+def sample_frame_indices(start_frame, end_frame, total_frames, num_frames):
+    """Linearly sample num_frames indices across the interaction window (shared with eval)."""
+    return torch.linspace(start_frame, min(end_frame, total_frames - 1), num_frames).long().tolist()
+
+
 class EgocentricHOIDataset(Dataset):
     def __init__(self, json_metadata_path, video_dir, processor, num_frames=8,
                  min_pixels=64 * 28 * 28, max_pixels=256 * 28 * 28, max_length=2560):
@@ -49,30 +76,19 @@ class EgocentricHOIDataset(Dataset):
         end_frame = item["interaction_end_frame"]
         
         # Linearly sample 'num_frames' between the start and end of the action
-        frame_indices = torch.linspace(start_frame, min(end_frame, total_frames - 1), self.num_frames).long().tolist()
-        
+        frame_indices = sample_frame_indices(start_frame, end_frame, total_frames, self.num_frames)
+
         # Extract frames as a numpy array / torch tensor [Num_Frames, H, W, C]
         video_frames = vr.get_batch(frame_indices).asnumpy()
-        
-        # 2. Build the system prompt forcing the JSON schema
+
+        # 2. Build the system prompt forcing the JSON schema.
         # NOTE: must go through apply_chat_template, not a hand-written "<image>\n" string —
         # that literal text isn't a real special token, so the processor never inserts actual
         # image-placeholder tokens and the vision features have nowhere to slot in
         # (fails downstream with "Image features and image tokens do not match").
         # apply_chat_template emits one placeholder per {"type": "image"} entry, which the
         # processor then expands to match each frame's real patch count.
-        messages = [{
-            "role": "user",
-            "content": [{"type": "image"} for _ in range(len(video_frames))] + [{
-                "type": "text",
-                "text": (
-                    "Analyze this egocentric video sequence. "
-                    "Identify the active tool, target object, action verb, "
-                    "and whether a permanent point-of-no-return state change has occurred. "
-                    "Output your final answer strictly adhering to this JSON schema."
-                )
-            }]
-        }]
+        messages = build_user_messages(len(video_frames))
         prompt = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         
         # 3. Format the prompt+images using the VLM's native multimodal processor.
