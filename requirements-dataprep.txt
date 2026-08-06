@@ -1,0 +1,3 @@
+# Data preparation only (src/data_prep/) — not needed for training or serving.
+anthropic
+eva-decord
