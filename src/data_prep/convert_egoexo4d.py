@@ -18,15 +18,19 @@ Expected input layout (Ego-Exo4D downloader defaults):
   <root>/takes.json
   <root>/annotations/keystep_train.json  (or keystep_val.json / keystep_test.json)
   <root>/takes/<take_name>/frame_aligned_videos/<cam_id>/<stream_id>.mp4
+  (with --use_downscaled_448 / `egoexo --parts downscaled_takes/448`:
+   <root>/takes/<take_name>/frame_aligned_videos/downscaled/448/<stream_id>.mp4)
 
-Usage (ADR-0004 curated subset — 3 domains, ~10 takes each):
+Usage (ADR-0004 curated subset — 3 domains, ~10 takes each; downscaled video, per
+EgocentricHOIDataset's resolution cap, keeps the download to ~4GB instead of ~80GB+):
   python -m src.data_prep.convert_egoexo4d \
       --takes_json /path/to/takes.json \
       --keystep_json /path/to/annotations/keystep_train.json \
       --video_root /path/to/takes \
       --output data/converted/annotations.json \
       --scenarios "Covid-19 Rapid Antigen Test" "Fix a Flat Tire - Replace a Bike Tube" "Cooking an Omelet" \
-      --max_takes_per_scenario 10
+      --max_takes_per_scenario 10 \
+      --use_downscaled_448
 """
 import argparse
 import json
@@ -131,6 +135,14 @@ def main():
     )
     parser.add_argument("--limit", type=int, default=None, help="Cap number of segments (for a curated subset, ADR-0004)")
     parser.add_argument(
+        "--use_downscaled_448", action="store_true",
+        help="Point at the downscaled 448px video variant (egoexo CLI --parts "
+             "downscaled_takes/448) instead of full resolution — much smaller download, "
+             "sufficient given EgocentricHOIDataset already caps resolution hard. Real path is "
+             "frame_aligned_videos/downscaled/448/<file>.mp4, not what takes.json's "
+             "relative_path claims (that's the full-res path) — this flag rewrites it.",
+    )
+    parser.add_argument(
         "--llm_labels_cache", default=None,
         help="Path to output of src/data_prep/llm_label_segments.py. If given, segments found "
              "in the cache use the LLM-extracted labels; segments not found fall back to the "
@@ -165,7 +177,11 @@ def main():
         if take is None:
             stats["takes_not_in_takes_json"] += 1
             continue
-        scenario = take.get("scenario")
+        # scenario lives on the keystep annotation (take_anno), NOT on the takes.json record
+        # (take) — takes.json has no "scenario" field at all (it has task_name/parent_task_name
+        # instead), so checking take.get("scenario") silently returns None for every take and
+        # the filter matches nothing.
+        scenario = take_anno.get("scenario")
         if args.scenarios and scenario not in args.scenarios:
             stats["takes_wrong_scenario"] += 1
             continue
@@ -180,7 +196,16 @@ def main():
             stats["takes_missing_ego_video"] += 1
             continue
 
-        video_path = video_root / take.get("take_name", take_uid) / "frame_aligned_videos" / rel_path
+        # rel_path already includes the "frame_aligned_videos/" prefix (confirmed against a
+        # real takes.json, e.g. "frame_aligned_videos/aria01_214-1.mp4") — do NOT join
+        # "frame_aligned_videos" again here, that produces a duplicated path segment that
+        # silently never matched any real file until video was actually downloaded to test it.
+        if args.use_downscaled_448:
+            # Real downscaled video lives at frame_aligned_videos/downscaled/448/<file>.mp4,
+            # not what relative_path claims (that's the full-res path) — rewrite it.
+            prefix, filename = rel_path.rsplit("/", 1)
+            rel_path = f"{prefix}/downscaled/448/{filename}"
+        video_path = video_root / take.get("take_name", take_uid) / rel_path
         if not video_path.exists():
             stats["takes_missing_video_file"] += 1
             continue
