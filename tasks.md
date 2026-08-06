@@ -52,13 +52,29 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       cross-references keystep segments against atomic_descriptions narrations in the same
       time window for richer extraction context. Wired into `convert_egoexo4d.py` via
       `--llm_labels_cache`, falls back to heuristic for uncovered segments.
-- [ ] Set `ANTHROPIC_API_KEY` and run `llm_label_segments.py` for real (start with a small
-      `--limit` to sanity-check cost/quality before running the full corpus)
+- [x] Ran `llm_label_segments.py` on a 100-segment sample (5 takes, all "Covid-19 Rapid Antigen
+      Test" — dict-order artifact, not real diversity). 0 failures. Real cost measured:
+      118,634 in / 13,887 out tokens = $0.1881 for 100 segments (~$0.0019/segment). Quality
+      confirmed better than heuristic — `tool_detected` populated 4x from real narration text,
+      clean verb/object splits on compound step names.
+- [x] Full-corpus labeling would cost ~$25 (13k+ segments, 668 takes) — decided against it.
+      Defined curation criteria instead (below) so labeling only touches the curated subset
+      (~600 segments, ~$1.15) — cheaper AND tests real scenario diversity on purpose.
+- [x] Defined curation criteria ([ADR-0004](adr/0004-dataset-subset-curation.md)): 3 domains —
+      Covid-19 Rapid Antigen Test (medical/fine-motor), Fix a Flat Tire (mechanical/tool-use),
+      Cooking an Omelet (heat/state-change) — ~8-10 takes each, split by take_uid not segment.
+      Surveyed all 17 scenarios in the corpus (668 takes total) to pick these deliberately.
+- [x] Added `--scenarios`/`--max_takes_per_scenario` to both `convert_egoexo4d.py` and
+      `llm_label_segments.py` so curated-subset selection is consistent across both scripts
+- [ ] Run `llm_label_segments.py` for real with `--scenarios` + `--max_takes_per_scenario` set
+      per ADR-0004, on the full curated subset (not just a sample)
+- [ ] Run `convert_egoexo4d.py` with the same `--scenarios`/`--max_takes_per_scenario` +
+      `--llm_labels_cache` pointing at the labeled cache from the step above
+- [ ] Only now download `--parts takes` for the ~24-30 curated takes' video (not the full corpus)
 - [ ] Spot-check a sample of LLM-extracted labels — confirm quality improvement over heuristic
       before trusting as training data (ADR-0004)
-- [ ] Define curation criteria for the fixed subset (task diversity, interaction-type balance),
-      then rerun conversion with `--scenario`/`--limit` to produce the actual curated set
-- [ ] Build held-out eval split from the curated set (same split reused for all 4 strategies)
+- [ ] Build held-out eval split from the curated set, by take_uid (same split reused for all 4
+      strategies)
 - [ ] Sanity-check a handful of converted samples by hand
 
 ## Phase 2 — Real strategy runs (A, B, C, D) on rented GPU
