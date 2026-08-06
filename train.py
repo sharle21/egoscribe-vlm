@@ -1,5 +1,7 @@
 # train.py
 import argparse
+import random
+import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from unsloth import FastVisionModel, is_bfloat16_supported
@@ -55,10 +57,24 @@ def parse_args():
         required=True,
         help="Which partial-tuning strategy to run (see ADR-0002).",
     )
+    parser.add_argument(
+        "--annotations", type=str, default="data/samples/annotations.json",
+        help="Path to the annotations JSON. Phase 2 real runs MUST pass "
+             "data/converted/annotations_train.json — the default is the toy smoke-test set.",
+    )
+    parser.add_argument(
+        "--video_dir", type=str, default="data/samples/",
+        help="Root dir the video_file paths in --annotations are resolved against.",
+    )
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=2)
     parser.add_argument("--lr", type=float, default=2e-5)
     parser.add_argument("--num_frames", type=int, default=8, help="Lower for small-VRAM smoke tests")
+    parser.add_argument("--seed", type=int, default=3407, help="Seeds python/numpy/torch + DataLoader shuffle for reproducibility.")
+    parser.add_argument(
+        "--max_steps", type=int, default=-1,
+        help="Cap optimizer steps (across all epochs). -1 = no cap. Use a small value for pilots.",
+    )
     parser.add_argument(
         "--gradient_checkpointing", type=str, default="unsloth", choices=["unsloth", "true", "false"],
         help="Standard VRAM/speed tradeoff. Leave default unless you need to debug — a prior "
@@ -71,6 +87,13 @@ def parse_args():
 def main():
     args = parse_args()
     strategy_config = STRATEGY_CONFIGS[args.strategy]
+
+    # 0. Seed everything so strategy A-D comparisons differ by config, not by RNG. random_state on
+    # get_peft_model only seeds LoRA init — data order, dropout, and numpy also need pinning.
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
 
     # 1. Initialize the HF Accelerate Environment.
     # mixed_precision is set explicitly here, not left to config/accelerate_config.yaml, because
@@ -113,10 +136,13 @@ def main():
     if accelerator.is_main_process:
         model.print_trainable_parameters()
 
-    # 4. Instantiate our Custom Data Pipeline (Using your Toy Sample Subset first!)
+    # 4. Instantiate our Custom Data Pipeline. Source is configurable — Phase 2 passes
+    # --annotations data/converted/annotations_train.json (see ADR / split manifest).
+    if accelerator.is_main_process:
+        print(f"[{args.strategy}] annotations={args.annotations} video_dir={args.video_dir} seed={args.seed}")
     train_dataset = EgocentricHOIDataset(
-        json_metadata_path="data/samples/annotations.json",
-        video_dir="data/samples/",
+        json_metadata_path=args.annotations,
+        video_dir=args.video_dir,
         processor=processor,
         num_frames=args.num_frames
     )
@@ -144,11 +170,14 @@ def main():
             batch_dict["image_grid_thw"] = image_grid_thw
         return batch_dict
 
+    shuffle_gen = torch.Generator()
+    shuffle_gen.manual_seed(args.seed)
     train_dataloader = DataLoader(
         train_dataset,
         batch_size=args.batch_size,
         shuffle=True,
-        collate_fn=collate_fn
+        collate_fn=collate_fn,
+        generator=shuffle_gen,
     )
 
     # 5. Optimization & Learning Schedule setup
@@ -162,8 +191,11 @@ def main():
     # 7. The Core Training Loop — identical across strategies A-D by construction
     model.train()
 
+    global_step = 0
+    stop = False
     for epoch in range(args.epochs):
         total_loss = 0
+        steps_this_epoch = 0
         progress_bar = tqdm(
             train_dataloader,
             desc=f"[{args.strategy}] Epoch {epoch+1}",
@@ -180,10 +212,23 @@ def main():
                 optimizer.zero_grad()
 
                 total_loss += loss.item()
+                steps_this_epoch += 1
                 progress_bar.set_postfix({"loss": loss.item()})
 
-        if accelerator.is_main_process:
-            print(f"[{args.strategy}] Epoch {epoch+1} finished. Average Loss: {total_loss / len(train_dataloader):.4f}")
+            # Count an optimizer step only when accumulation actually stepped, so --max_steps
+            # means real updates regardless of gradient_accumulation_steps.
+            if accelerator.sync_gradients:
+                global_step += 1
+                if args.max_steps > 0 and global_step >= args.max_steps:
+                    stop = True
+                    break
+
+        if accelerator.is_main_process and steps_this_epoch:
+            print(f"[{args.strategy}] Epoch {epoch+1} finished. Average Loss: {total_loss / steps_this_epoch:.4f}")
+        if stop:
+            if accelerator.is_main_process:
+                print(f"[{args.strategy}] Hit --max_steps={args.max_steps}, stopping.")
+            break
 
     # 8. Un-wrap and Save the Finetuned Adapters, namespaced by strategy so runs don't collide
     accelerator.wait_for_everyone()
