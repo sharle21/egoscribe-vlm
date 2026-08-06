@@ -102,8 +102,11 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       "turning on"/"stove" — the "lighter" tool wasn't visible in the single still frame first
       checked, but user manually scrubbed the actual video (~0:32-0:36) and confirmed it's
       there. Labels track real video content, no discrepancies found.
-- [ ] Build held-out eval split from the curated set, by take_uid (same split reused for all 4
-      strategies)
+- [x] Built held-out train/eval split (`src/data_prep/split_curated_dataset.py`), by take_uid,
+      stratified per scenario (8/2 takes per domain, seed 42): 572 train segments / 24 takes,
+      110 eval segments / 6 takes. Verified zero take overlap between splits. Written to
+      `data/converted/annotations_train.json` / `annotations_eval.json` — this exact pair is
+      reused identically across all 4 strategy runs (Phase 2). Phase 1 (data) complete.
 
 ## Phase 2 — Real strategy runs (A, B, C, D) on rented GPU
 Config/code already validated in Phase 0's smoke test — this phase is running the same 4
