@@ -1,0 +1,52 @@
+{
+  "train": {
+    "file": "data/converted/annotations_train.json",
+    "sha256": "c8f09f115472312757d77bd5d7dc11c68092611aa9142d214a156e70cee10957",
+    "num_segments": 572,
+    "num_takes": 24,
+    "takes": {
+      "cmu_bike18_2": 2,
+      "fair_bike_02_11": 16,
+      "fair_bike_02_3": 17,
+      "fair_bike_06_3": 13,
+      "fair_bike_07_15": 13,
+      "fair_bike_07_3": 13,
+      "georgiatech_bike_04_10": 16,
+      "georgiatech_bike_04_4": 14,
+      "georgiatech_covid_05_4": 16,
+      "georgiatech_covid_05_8": 20,
+      "georgiatech_covid_07_6": 26,
+      "georgiatech_covid_12_9": 30,
+      "iiith_cooking_26_1": 39,
+      "iiith_cooking_28_1": 43,
+      "iiith_cooking_40_1": 31,
+      "iiith_cooking_75_2": 40,
+      "iiith_cooking_79_2": 15,
+      "iiith_cooking_85_2": 36,
+      "nus_covidtest_01_3": 22,
+      "nus_covidtest_16_2": 24,
+      "sfu_cooking_005_1": 23,
+      "sfu_covid_009_2": 18,
+      "sfu_covid_009_4": 26,
+      "uniandes_cooking_008_4": 59
+    }
+  },
+  "eval": {
+    "file": "data/converted/annotations_eval.json",
+    "sha256": "e9e0261457a294f5ca4464b008a48c18df261927bf7ddf0eee9742997a175e61",
+    "num_segments": 110,
+    "num_takes": 6,
+    "takes": {
+      "fair_bike_02_7": 13,
+      "fair_bike_07_11": 10,
+      "georgiatech_covid_12_3": 18,
+      "iiith_cooking_81_2": 26,
+      "nus_covidtest_18_2": 24,
+      "sfu_cooking029_8": 19
+    }
+  },
+  "leakage_check": {
+    "overlapping_takes": [],
+    "clean": true
+  }
+}
