@@ -3,8 +3,9 @@
 Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 0 — Setup & code fixes
-- [ ] `egodex_test.zip` (17GB, local) is the wrong dataset — confirm safe to delete once
-      Ego-Exo4D access/download is sorted, to free disk space
+- [x] Deleted `egodex_test.zip` (16GB, wrong dataset) and an abandoned full-resolution
+      `~/data/ego-exo4d/takes/` download (21GB, superseded by `downscaled_takes/448`) after
+      disk hit 99% full mid-download — freed 37GB (190Mi → 38GB available)
 - [x] Resolve model choice ([ADR-0001](adr/0001-model-selection.md)) — Qwen2.5-VL-7B-Instruct, accepted
 - [ ] Update `serve.py` (SGLang path + `model_path`) from MiMo-VL to Qwen2.5-VL to match ADR-0001
 - [x] Fix label masking bug: pad `labels` with `-100`, not tokenizer pad id (`src/dataset.py`)
