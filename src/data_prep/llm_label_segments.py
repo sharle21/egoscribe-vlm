@@ -19,9 +19,16 @@ Usage:
   python -m src.data_prep.llm_label_segments \
       --keystep_json /path/to/keystep_train.json \
       --atomic_json /path/to/atomic_descriptions_train.json \
+      --takes_json /path/to/takes.json \
       --output data/converted/llm_labels_cache.json \
       --scenarios "Covid-19 Rapid Antigen Test" "Fix a Flat Tire - Replace a Bike Tube" "Cooking an Omelet" \
       --max_takes_per_scenario 10
+
+--takes_json is optional but strongly recommended whenever --max_takes_per_scenario is set: it
+lets the per-scenario cap only count takes that actually have a usable egocentric video
+reference, matching what convert_egoexo4d.py can later use. Without it, a take that's referenced
+in keystep_train.json but missing from takes.json (a real gap — 18/668 takes hit this, see
+tasks.md) can consume a cap slot and get labeled for nothing, since it can never be converted.
 
 Cost/model: defaults to Claude Haiku 4.5 — cheap/fast, appropriate for a structured-extraction
 task (not open-ended reasoning) across thousands of segments. Override with --model if a
@@ -34,6 +41,7 @@ from pathlib import Path
 
 import anthropic
 
+from src.data_prep.convert_egoexo4d import find_egocentric_relative_path
 from src.schema import HandObjectInteraction
 
 MODEL = "claude-haiku-4-5-20251001"
@@ -149,6 +157,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--keystep_json", required=True)
     parser.add_argument("--atomic_json", required=True)
+    parser.add_argument(
+        "--takes_json", default=None,
+        help="Path to takes.json. Recommended with --max_takes_per_scenario: filters out takes "
+             "missing from takes.json or lacking an egocentric video reference before they can "
+             "consume a per-scenario cap slot (avoids paying to label an unusable take).",
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument(
         "--scenarios", nargs="+", default=None,
@@ -172,6 +186,7 @@ def main():
     atomic = load_json(args.atomic_json)
     keystep_annos = keystep.get("annotations", {})
     atomic_annos = atomic.get("annotations", {})
+    takes_by_uid = {t["take_uid"]: t for t in load_json(args.takes_json)} if args.takes_json else None
 
     cache = {}
     n_done = 0
@@ -180,10 +195,16 @@ def main():
     total_output_tokens = 0
     takes_used_per_scenario = {}
 
+    n_skipped_unusable = 0
     for take_uid, take_anno in keystep_annos.items():
         scenario = take_anno.get("scenario")
         if args.scenarios and scenario not in args.scenarios:
             continue
+        if takes_by_uid is not None:
+            take = takes_by_uid.get(take_uid)
+            if take is None or find_egocentric_relative_path(take) is None:
+                n_skipped_unusable += 1
+                continue
         if args.max_takes_per_scenario is not None:
             used = takes_used_per_scenario.get(scenario, 0)
             if used >= args.max_takes_per_scenario:
@@ -224,6 +245,8 @@ def main():
         json.dump(cache, f, indent=2)
 
     print(f"Wrote {n_done} labeled segments ({n_failed} failed) across {len(cache)} takes to {args.output}")
+    if takes_by_uid is not None:
+        print(f"Skipped {n_skipped_unusable} takes with no usable egocentric video reference")
     if takes_used_per_scenario:
         print(f"Takes used per scenario: {takes_used_per_scenario}")
     if args.model == MODEL:
