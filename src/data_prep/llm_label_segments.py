@@ -109,6 +109,12 @@ def build_prompt(step_name, step_description, narrations):
     )
 
 
+# Haiku 4.5 pricing, $/1M tokens — used only to report an estimated cost at the end of a run,
+# not sent to the API. Update if pricing changes or --model is overridden to something else.
+HAIKU_INPUT_PER_MTOK = 1.00
+HAIKU_OUTPUT_PER_MTOK = 5.00
+
+
 def extract_one(client, model, step_name, step_description, narrations, max_retries=3):
     prompt = build_prompt(step_name, step_description, narrations)
     for attempt in range(max_retries):
@@ -128,7 +134,8 @@ def extract_one(client, model, step_name, step_description, narrations, max_retr
                     # has the same JSON shape as every other (matters since dataset.py trains
                     # on json.dumps(expected_output) verbatim — inconsistent shape across
                     # examples would give the model a noisier target to learn).
-                    return HandObjectInteraction(**block.input).model_dump()
+                    result = HandObjectInteraction(**block.input).model_dump()
+                    return result, response.usage.input_tokens, response.usage.output_tokens
             raise ValueError("No tool_use block in response")
         except (anthropic.RateLimitError, anthropic.APIStatusError) as e:
             if attempt == max_retries - 1:
@@ -157,6 +164,8 @@ def main():
     cache = {}
     n_done = 0
     n_failed = 0
+    total_input_tokens = 0
+    total_output_tokens = 0
 
     for take_uid, take_anno in keystep_annos.items():
         if args.scenario and take_anno.get("scenario") != args.scenario:
@@ -173,11 +182,13 @@ def main():
                 take_atomic_records, segment["start_time"], segment["end_time"]
             )
             try:
-                extracted = extract_one(
+                extracted, in_tok, out_tok = extract_one(
                     client, args.model,
                     segment["step_name"], segment["step_description"], narrations,
                 )
                 take_cache[str(segment["step_unique_id"])] = extracted
+                total_input_tokens += in_tok
+                total_output_tokens += out_tok
                 n_done += 1
             except Exception as e:
                 n_failed += 1
@@ -194,6 +205,14 @@ def main():
         json.dump(cache, f, indent=2)
 
     print(f"Wrote {n_done} labeled segments ({n_failed} failed) across {len(cache)} takes to {args.output}")
+    if args.model == MODEL:
+        cost = (total_input_tokens / 1e6) * HAIKU_INPUT_PER_MTOK + (total_output_tokens / 1e6) * HAIKU_OUTPUT_PER_MTOK
+        print(
+            f"Tokens: {total_input_tokens} in / {total_output_tokens} out "
+            f"— est. cost ${cost:.4f} at Haiku 4.5 rates (${HAIKU_INPUT_PER_MTOK}/${HAIKU_OUTPUT_PER_MTOK} per 1M in/out)"
+        )
+    else:
+        print(f"Tokens: {total_input_tokens} in / {total_output_tokens} out (cost not estimated — non-default --model)")
 
 
 if __name__ == "__main__":
