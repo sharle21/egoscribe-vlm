@@ -29,34 +29,45 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       collisions. Phase 0 complete.
 
 ## Phase 1 — Data
-- [ ] Confirm Ego-Exo4D license/access is actually granted
+- [x] Ego-Exo4D license granted, credentials received
+- [x] Installed EgoExo downloader CLI (`pip install ego4d`), `aws configure` done
+- [x] Downloaded `--parts metadata annotations` (10.3GiB, 5075 files) to `~/data/ego-exo4d`
+      (outside repo) — verified complete: file count matches, size matches, no zero-byte
+      files, all JSON parses cleanly, CLI itself reported 100%/"Everything downloaded"
 - [x] Inspect real Ego-Exo4D annotation schema (keystep + atomic_descriptions, via docs) — see
       `src/data_prep/convert_egoexo4d.py` docstring for the confirmed field layout
 - [x] Write Ego-Exo4D → `EgocentricHOIDataset` schema conversion script
       (`src/data_prep/convert_egoexo4d.py`) — mechanical parts (video lookup, sec→frame) are
       trustworthy; structured labels (tool/object/verb/state/safety-gear) are a naive heuristic
       split of `step_name`, flagged `needs_review` in `review_meta`, NOT ground truth yet
-- [ ] Run the script once against real downloaded `takes.json` + `keystep_train.json` and
-      confirm `find_egocentric_relative_path()`'s assumed `frame_aligned_videos[cam][stream]`
-      layout actually matches (field names were confirmed via docs/search, not a real file —
-      treat as unverified until run once)
-- [ ] Human review pass over a sample of `review_meta.needs_review=True` records — decide
-      whether naive verb/object split is good enough or needs an LLM-assisted labeling pass
+- [x] Ran the script against real `takes.json` + `keystep_train.json` — 0 takes missing an
+      aria/rgb path across all 668 keystep-annotated takes; `find_egocentric_relative_path()`
+      assumptions confirmed correct. (18/668 takes referenced in keystep have no matching
+      entry in takes.json at all — likely dropped in a later dataset revision; script now
+      tracks this via `takes_not_in_takes_json` stat instead of silently skipping)
+- [x] Spot-checked heuristic labels against real keystep segments — confirmed noisy (~40-50%
+      clean, rest broken on compound/clause step names; tool_detected/safety_gear_missing
+      always empty, not present in keystep text at all)
+- [x] Built LLM-assisted labeling (`src/data_prep/llm_label_segments.py`, Claude Haiku 4.5) —
+      cross-references keystep segments against atomic_descriptions narrations in the same
+      time window for richer extraction context. Wired into `convert_egoexo4d.py` via
+      `--llm_labels_cache`, falls back to heuristic for uncovered segments.
+- [ ] Set `ANTHROPIC_API_KEY` and run `llm_label_segments.py` for real (start with a small
+      `--limit` to sanity-check cost/quality before running the full corpus)
+- [ ] Spot-check a sample of LLM-extracted labels — confirm quality improvement over heuristic
+      before trusting as training data (ADR-0004)
 - [ ] Define curation criteria for the fixed subset (task diversity, interaction-type balance),
       then rerun conversion with `--scenario`/`--limit` to produce the actual curated set
 - [ ] Build held-out eval split from the curated set (same split reused for all 4 strategies)
 - [ ] Sanity-check a handful of converted samples by hand
 
-## Phase 2 — Strategy A: Full LoRA (baseline)
-- [ ] Configure `LoraConfig` for all target modules
-- [ ] Run on rented GPU, log cost + wall time
-- [ ] Save checkpoint + trainable-param count
-
-## Phase 3 — Strategies B, C, D
-- [ ] Strategy B: vision-encoder only
-- [ ] Strategy C: language-decoder only
-- [ ] Strategy D: attention + MLP hybrid
-- [ ] Same subset, same steps/epochs, same seed policy as baseline
+## Phase 2 — Real strategy runs (A, B, C, D) on rented GPU
+Config/code already validated in Phase 0's smoke test — this phase is running the same 4
+strategies for real, on the curated Ego-Exo4D subset once Phase 1 produces it.
+- [ ] Pick cloud provider (see Open Questions)
+- [ ] Run all 4 strategies on the curated subset — same split, seed, steps, batch size
+- [ ] Log cost + wall time per strategy
+- [ ] Save checkpoints + trainable-param counts (already known to differ correctly per strategy)
 
 ## Phase 4 — Evaluation
 - [ ] Build eval harness (JSON validity, per-field accuracy, PONR F1, safety-gear P/R)
