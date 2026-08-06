@@ -96,12 +96,12 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] `data/converted/annotations.json` now exists: 682 real training records, exactly matching
       all 682 LLM-labeled segments (0 fallback to heuristic, 0 bad videos). This is the actual
       curated training set — ready to point `EgocentricHOIDataset` at.
-- [x] Spot-checked 3 records (one per domain) by extracting the actual video frame and visually
-      comparing against the label. All 3 confirmed plausible: bike-shop fisheye view with hands
-      near a wheel matched "checking for damage"/"tire"; overhead unboxing shot matched
-      "unboxing"/"package/carton"; dark kitchen scene with visible stove matched "turning
-      on"/"stove" (couldn't independently confirm the "lighter" tool from one still frame — not
-      a red flag, just unverifiable from a single image). Labels track real video content.
+- [x] Spot-checked 3 records (one per domain) — bike, covid, cooking. All 3 fully confirmed:
+      bike-shop fisheye view with hands near a wheel matched "checking for damage"/"tire";
+      overhead unboxing shot matched "unboxing"/"package/carton"; kitchen scene matched
+      "turning on"/"stove" — the "lighter" tool wasn't visible in the single still frame first
+      checked, but user manually scrubbed the actual video (~0:32-0:36) and confirmed it's
+      there. Labels track real video content, no discrepancies found.
 - [ ] Build held-out eval split from the curated set, by take_uid (same split reused for all 4
       strategies)
 
