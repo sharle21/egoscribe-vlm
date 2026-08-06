@@ -74,8 +74,10 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       now takes an optional `--takes_json` and filters out unusable takes (missing from
       takes.json, or no aria/rgb path) *before* they consume a cap slot, reusing
       `convert_egoexo4d.py`'s `find_egocentric_relative_path()`.
-- [ ] Rerun `llm_label_segments.py` with `--takes_json` added, to get a clean 30/30 usable-take
-      cache (old `data/converted/llm_labels_cache.json` had 2 dead takes in it)
+- [x] Reran with `--takes_json` — clean 30/30 usable takes (10/10/10 balanced), 682 segments,
+      0 failures, $1.27. Correctly skipped 10 unusable takes across all 3 scenarios (found
+      before spending on them, not after). `data/converted/llm_labels_cache.json` is now the
+      real curated-subset label cache.
 - [ ] Run `convert_egoexo4d.py` with the same `--scenarios`/`--max_takes_per_scenario` +
       `--llm_labels_cache` pointing at the labeled cache from the step above
 - [ ] Only now download `--parts takes` for the ~24-30 curated takes' video (not the full corpus)
