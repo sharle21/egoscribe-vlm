@@ -7,11 +7,12 @@ state-change/safety-gear). Its `keystep` annotations give procedural step segmen
 `src/schema.py::HandObjectInteraction`.
 
 This script does the mechanical, trustworthy part (locating the egocentric video per take,
-converting seconds -> frame indices) and a HEURISTIC, NOT-TRUSTWORTHY first pass at the
-structured labels (tool_detected/target_object/action_verb/point_of_no_return_detected/
-current_state/safety_gear_missing), clearly flagged as such in the output. Per ADR-0004,
-a human curation/review pass over a sample of the output is required before treating any of
-these as ground truth for training or eval.
+converting seconds -> frame indices). For labels, it prefers an LLM-extracted cache (see
+src/data_prep/llm_label_segments.py) via --llm_labels_cache, and falls back to a HEURISTIC,
+NOT-TRUSTWORTHY naive step_name split for any segment the cache doesn't cover. Per ADR-0004,
+a human curation/review pass over a sample of the output is still required before treating
+any of it as ground truth for training or eval — the LLM pass is a large quality improvement
+over the heuristic, not a guarantee.
 
 Expected input layout (Ego-Exo4D downloader defaults):
   <root>/takes.json
@@ -88,6 +89,23 @@ def heuristic_label_from_keystep(segment: dict) -> tuple[dict, dict]:
     return expected_output, review_meta
 
 
+def label_from_llm_cache(segment: dict, take_cache: dict) -> tuple[dict, dict] | None:
+    """Returns (expected_output, review_meta) if this segment's step_unique_id is present in
+    the take's LLM-extracted cache, else None (caller falls back to the heuristic).
+    """
+    key = str(segment.get("step_unique_id"))
+    if take_cache is None or key not in take_cache:
+        return None
+    expected_output = take_cache[key]
+    review_meta = {
+        "needs_review": False,  # LLM-extracted, not naive heuristic — still spot-check per ADR-0004
+        "source": "llm",
+        "source_step_id": segment.get("step_id"),
+        "source_step_unique_id": segment.get("step_unique_id"),
+    }
+    return expected_output, review_meta
+
+
 def seconds_to_frame(seconds: float, fps: float, total_frames: int) -> int:
     frame = round(seconds * fps)
     return max(0, min(frame, total_frames - 1))
@@ -101,11 +119,18 @@ def main():
     parser.add_argument("--output", required=True)
     parser.add_argument("--scenario", default=None, help="Only convert takes with this scenario name")
     parser.add_argument("--limit", type=int, default=None, help="Cap number of segments (for a curated subset, ADR-0004)")
+    parser.add_argument(
+        "--llm_labels_cache", default=None,
+        help="Path to output of src/data_prep/llm_label_segments.py. If given, segments found "
+             "in the cache use the LLM-extracted labels; segments not found fall back to the "
+             "naive heuristic split (with needs_review=True) same as when this flag is omitted.",
+    )
     args = parser.parse_args()
 
     takes = {t["take_uid"]: t for t in load_json(args.takes_json)}
     keystep = load_json(args.keystep_json)
     annotations_by_take = keystep.get("annotations", {})
+    llm_cache = load_json(args.llm_labels_cache) if args.llm_labels_cache else {}
 
     video_root = Path(args.video_root)
     output_records = []
@@ -117,6 +142,8 @@ def main():
         "takes_missing_video_file": 0,
         "segments_converted": 0,
         "segments_skipped_bad_video": 0,
+        "segments_from_llm_cache": 0,
+        "segments_from_heuristic": 0,
     }
 
     for take_uid, take_anno in annotations_by_take.items():
@@ -147,13 +174,20 @@ def main():
             stats["segments_skipped_bad_video"] += 1
             continue
 
+        take_llm_cache = llm_cache.get(take_uid)
         for segment in take_anno.get("segments", []):
             start_frame = seconds_to_frame(segment["start_time"], fps, total_frames)
             end_frame = seconds_to_frame(segment["end_time"], fps, total_frames)
             if end_frame <= start_frame:
                 continue
 
-            expected_output, review_meta = heuristic_label_from_keystep(segment)
+            llm_result = label_from_llm_cache(segment, take_llm_cache)
+            if llm_result is not None:
+                expected_output, review_meta = llm_result
+                stats["segments_from_llm_cache"] += 1
+            else:
+                expected_output, review_meta = heuristic_label_from_keystep(segment)
+                stats["segments_from_heuristic"] += 1
             output_records.append({
                 "video_file": str(video_path.relative_to(video_root)),
                 "interaction_start_frame": start_frame,
@@ -174,12 +208,19 @@ def main():
 
     print(f"Wrote {len(output_records)} records to {args.output}")
     print(f"Stats: {stats}")
-    print(
-        "NOTE: all expected_output entries are heuristic (_needs_review=True) — "
-        "tool_detected/safety_gear_missing are placeholders and action_verb/target_object "
-        "are a naive split of step_name. Review a sample before trusting these as labels "
-        "(ADR-0004)."
-    )
+    if args.llm_labels_cache:
+        print(
+            f"{stats['segments_from_llm_cache']} segments used LLM-extracted labels, "
+            f"{stats['segments_from_heuristic']} fell back to the naive heuristic (not in cache). "
+            "Spot-check a sample of BOTH before trusting as ground truth (ADR-0004)."
+        )
+    else:
+        print(
+            "NOTE: no --llm_labels_cache given, all expected_output entries are heuristic "
+            "(needs_review=True) — tool_detected/safety_gear_missing are placeholders and "
+            "action_verb/target_object are a naive split of step_name. Review a sample before "
+            "trusting these as labels (ADR-0004)."
+        )
 
 
 if __name__ == "__main__":
