@@ -79,14 +79,27 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       0 failures, $1.27. Correctly skipped 10 unusable takes across all 3 scenarios (found
       before spending on them, not after). `data/converted/llm_labels_cache.json` is now the
       real curated-subset label cache.
-- [ ] Run `convert_egoexo4d.py` with the same `--scenarios`/`--max_takes_per_scenario` +
-      `--llm_labels_cache` pointing at the labeled cache from the step above
-- [ ] Only now download `--parts takes` for the ~24-30 curated takes' video (not the full corpus)
-- [ ] Spot-check a sample of LLM-extracted labels — confirm quality improvement over heuristic
-      before trusting as training data (ADR-0004)
+- [x] Downloaded video for the 30 curated takes only, via `egoexo --parts downscaled_takes/448
+      --uids <30 uids>` (not full corpus, not full resolution — 3.79GiB total, matches
+      `EgocentricHOIDataset`'s resolution cap). Hit two real problems along the way, both
+      fixed: (1) disk filled to 99% mid-download from an abandoned full-res attempt, freed by
+      deleting that + `egodex_test.zip`; (2) `--parts takes` alone pulls every camera stream
+      per take (84GB for 30 clips) — `downscaled_takes/448` is the right, much smaller part.
+- [x] Ran `convert_egoexo4d.py` against real downloaded video — found and fixed two real path
+      bugs: (1) `rel_path` from `takes.json` already includes the `frame_aligned_videos/`
+      prefix, but the script joined it again, producing a path that could never match any real
+      file (silent until video actually existed to test against); (2) the scenario filter
+      checked `takes.json`'s `scenario` field, but that field doesn't exist there — it only
+      exists on `keystep_train.json`'s records (`takes.json` has `task_name`/`parent_task_name`
+      instead), so the filter matched 0/668 takes with zero error, only caught via the stats
+      counter. Both fixed; `--use_downscaled_448` flag added.
+- [x] `data/converted/annotations.json` now exists: 682 real training records, exactly matching
+      all 682 LLM-labeled segments (0 fallback to heuristic, 0 bad videos). This is the actual
+      curated training set — ready to point `EgocentricHOIDataset` at.
+- [ ] Spot-check a sample of `data/converted/annotations.json` by hand (video actually shows what
+      the label claims) — last verification before trusting this as training data (ADR-0004)
 - [ ] Build held-out eval split from the curated set, by take_uid (same split reused for all 4
       strategies)
-- [ ] Sanity-check a handful of converted samples by hand
 
 ## Phase 2 — Real strategy runs (A, B, C, D) on rented GPU
 Config/code already validated in Phase 0's smoke test — this phase is running the same 4
