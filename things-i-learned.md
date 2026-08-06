@@ -111,4 +111,34 @@ verify a fix's mechanism is actually active before trusting that it should have 
 
 ---
 
+## 2026-08-05 — Same field name, two different files, silently wrong filter
+
+**What happened:** `convert_egoexo4d.py`'s `--scenarios` filter checked `take.get("scenario")`
+where `take` came from `takes.json`. `llm_label_segments.py`'s equivalent filter checked
+`take_anno.get("scenario")` where `take_anno` came from `keystep_train.json`. Both looked
+correct and both scripts were written around the same time with the same mental model. Running
+the conversion script for real produced `takes_wrong_scenario: 650` out of 668 — every take
+appeared to fail the scenario filter, even ones already confirmed (by the labeling run) to
+match. Root cause: `takes.json` records don't have a `scenario` field at all — that dataset
+uses `task_name`/`parent_task_name` instead. `take.get("scenario")` silently returned `None`
+for every record, and `None not in args.scenarios` is always true, so the filter rejected
+everything without ever raising an error.
+
+**What I learned:** When two files in the same dataset both plausibly could carry a field,
+verify which one actually does before writing the filter — don't assume a name that "sounds
+right" resolves against the file you're about to query. A `.get()` on a missing key returns
+`None` instead of raising, so this kind of bug produces *systematically wrong results with zero
+errors* — the stats counter (`takes_wrong_scenario: 650/668`) was the only thing that caught
+it, because I was already in the habit of tracking every skip reason instead of just the
+success count (a leftover discipline from an earlier bug this same day).
+
+**Interview answer:** "Two scripts assumed the same field lived on two different files in the
+dataset. Neither threw an error — a missing dict key just returned None and the filter matched
+nothing. What actually caught it was a stats counter I'd already added for a different reason
+earlier that day; it's a good example of why I default to counting every skip/rejection reason
+rather than just top-line success, since silent-failure bugs like this don't announce
+themselves any other way."
+
+---
+
 ## (add entries here as the project progresses)
