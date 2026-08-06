@@ -110,8 +110,16 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
 
 ## Phase 2 — Real strategy runs (A, B, C, D) on rented GPU
 Config/code already validated in Phase 0's smoke test — this phase is running the same 4
-strategies for real, on the curated Ego-Exo4D subset once Phase 1 produces it.
-- [ ] Pick cloud provider (see Open Questions)
+strategies for real, on the curated Ego-Exo4D subset (Phase 1, done).
+- [x] Picked provider: Google Cloud, G2 instance w/ 1x NVIDIA L4 (24GB), paid via $300/90-day
+      free-trial credit (upgraded to paid billing to unlock GPU access, no charge yet)
+- [~] Setting up GCP VM: `gcloud compute instances create egoscribe-l4` (G2, L4, PyTorch image,
+      100GB disk) — walking through gcloud CLI install/auth/VM creation/SSH
+- [ ] On the VM: clone repo, `pip install -r requirements-train.txt`, pull curated dataset +
+      video (either re-run `egoexo --uids <30 curated uids>` on the VM, or transfer from local)
+- [ ] Benchmark Strategy A for ~15-20 min — get real steps/sec, extrapolate real time/cost for
+      all 4 strategies before committing to full runs (training-time estimate so far is a rough
+      guess extrapolated from Colab T4, could be off 2x either way)
 - [ ] Run all 4 strategies on the curated subset — same split, seed, steps, batch size
 - [ ] Log cost + wall time per strategy
 - [ ] Save checkpoints + trainable-param counts (already known to differ correctly per strategy)
@@ -126,6 +134,6 @@ strategies for real, on the curated Ego-Exo4D subset once Phase 1 produces it.
 - [ ] Write up honest findings (including failures) — feed into [things-i-learned.md](things-i-learned.md)
 - [ ] Finalize README (no "Built with Unsloth" fluff — lead with the research question)
 
-## Open questions
-- [ ] MiMo-VL vs Qwen2.5-VL — see ADR-0001
-- [ ] Exact cloud provider (RunPod vs Vast.ai) — price/reliability check before committing
+## Open questions (resolved, kept for record)
+- [x] MiMo-VL vs Qwen2.5-VL — Qwen2.5-VL, see ADR-0001 (Accepted)
+- [x] Cloud provider — Google Cloud L4 + $300 free credit, over RunPod/Vast.ai (see Phase 2)
