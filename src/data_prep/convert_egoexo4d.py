@@ -19,13 +19,14 @@ Expected input layout (Ego-Exo4D downloader defaults):
   <root>/annotations/keystep_train.json  (or keystep_val.json / keystep_test.json)
   <root>/takes/<take_name>/frame_aligned_videos/<cam_id>/<stream_id>.mp4
 
-Usage:
+Usage (ADR-0004 curated subset — 3 domains, ~10 takes each):
   python -m src.data_prep.convert_egoexo4d \
       --takes_json /path/to/takes.json \
       --keystep_json /path/to/annotations/keystep_train.json \
       --video_root /path/to/takes \
       --output data/converted/annotations.json \
-      [--scenario "Cooking"] [--limit 500]
+      --scenarios "Covid-19 Rapid Antigen Test" "Fix a Flat Tire - Replace a Bike Tube" "Cooking an Omelet" \
+      --max_takes_per_scenario 10
 """
 import argparse
 import json
@@ -117,7 +118,17 @@ def main():
     parser.add_argument("--keystep_json", required=True)
     parser.add_argument("--video_root", required=True, help="Directory containing per-take video folders")
     parser.add_argument("--output", required=True)
-    parser.add_argument("--scenario", default=None, help="Only convert takes with this scenario name")
+    parser.add_argument(
+        "--scenarios", nargs="+", default=None,
+        help="Only convert takes with one of these scenario names (ADR-0004 curation). "
+             "Space-separated, quote multi-word names, e.g. --scenarios 'Covid-19 Rapid "
+             "Antigen Test' 'Fix a Flat Tire - Replace a Bike Tube' 'Cooking an Omelet'",
+    )
+    parser.add_argument(
+        "--max_takes_per_scenario", type=int, default=None,
+        help="Cap takes per scenario for balanced sampling (ADR-0004) — applied independently "
+             "per scenario, so e.g. 10 gives ~10 takes from each of --scenarios, not 10 total",
+    )
     parser.add_argument("--limit", type=int, default=None, help="Cap number of segments (for a curated subset, ADR-0004)")
     parser.add_argument(
         "--llm_labels_cache", default=None,
@@ -134,10 +145,12 @@ def main():
 
     video_root = Path(args.video_root)
     output_records = []
+    takes_used_per_scenario = {}
     stats = {
         "takes_seen": 0,
         "takes_not_in_takes_json": 0,  # has keystep annotations but missing from takes.json
         "takes_wrong_scenario": 0,
+        "takes_over_per_scenario_cap": 0,
         "takes_missing_ego_video": 0,
         "takes_missing_video_file": 0,
         "segments_converted": 0,
@@ -152,9 +165,15 @@ def main():
         if take is None:
             stats["takes_not_in_takes_json"] += 1
             continue
-        if args.scenario and take.get("scenario") != args.scenario:
+        scenario = take.get("scenario")
+        if args.scenarios and scenario not in args.scenarios:
             stats["takes_wrong_scenario"] += 1
             continue
+        if args.max_takes_per_scenario is not None:
+            used = takes_used_per_scenario.get(scenario, 0)
+            if used >= args.max_takes_per_scenario:
+                stats["takes_over_per_scenario_cap"] += 1
+                continue
 
         rel_path = find_egocentric_relative_path(take)
         if rel_path is None:
@@ -173,6 +192,13 @@ def main():
         except Exception:
             stats["segments_skipped_bad_video"] += 1
             continue
+
+        # Only count this take against the per-scenario cap once it's confirmed usable
+        # (video opens successfully) — otherwise the cap could reject good takes later in
+        # iteration order while having "spent" its budget on takes that never contributed
+        # any segments.
+        if args.max_takes_per_scenario is not None:
+            takes_used_per_scenario[scenario] = takes_used_per_scenario.get(scenario, 0) + 1
 
         take_llm_cache = llm_cache.get(take_uid)
         for segment in take_anno.get("segments", []):
@@ -208,6 +234,8 @@ def main():
 
     print(f"Wrote {len(output_records)} records to {args.output}")
     print(f"Stats: {stats}")
+    if takes_used_per_scenario:
+        print(f"Takes used per scenario: {takes_used_per_scenario}")
     if args.llm_labels_cache:
         print(
             f"{stats['segments_from_llm_cache']} segments used LLM-extracted labels, "
