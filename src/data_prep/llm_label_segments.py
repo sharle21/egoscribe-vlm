@@ -20,7 +20,8 @@ Usage:
       --keystep_json /path/to/keystep_train.json \
       --atomic_json /path/to/atomic_descriptions_train.json \
       --output data/converted/llm_labels_cache.json \
-      [--scenario "Covid-19 Rapid Antigen Test"] [--limit 500]
+      --scenarios "Covid-19 Rapid Antigen Test" "Fix a Flat Tire - Replace a Bike Tube" "Cooking an Omelet" \
+      --max_takes_per_scenario 10
 
 Cost/model: defaults to Claude Haiku 4.5 — cheap/fast, appropriate for a structured-extraction
 task (not open-ended reasoning) across thousands of segments. Override with --model if a
@@ -149,7 +150,18 @@ def main():
     parser.add_argument("--keystep_json", required=True)
     parser.add_argument("--atomic_json", required=True)
     parser.add_argument("--output", required=True)
-    parser.add_argument("--scenario", default=None)
+    parser.add_argument(
+        "--scenarios", nargs="+", default=None,
+        help="Only label takes with one of these scenario names (ADR-0004 curation) — pass the "
+             "same set given to convert_egoexo4d.py --scenarios so the labeled cache actually "
+             "covers the curated subset.",
+    )
+    parser.add_argument(
+        "--max_takes_per_scenario", type=int, default=None,
+        help="Cap takes per scenario (ADR-0004) — same semantics as convert_egoexo4d.py's flag "
+             "of the same name; pass the same value to keep the two scripts' take selection "
+             "aligned.",
+    )
     parser.add_argument("--limit", type=int, default=None, help="Cap number of segments (cost control)")
     parser.add_argument("--model", default=MODEL)
     args = parser.parse_args()
@@ -166,10 +178,17 @@ def main():
     n_failed = 0
     total_input_tokens = 0
     total_output_tokens = 0
+    takes_used_per_scenario = {}
 
     for take_uid, take_anno in keystep_annos.items():
-        if args.scenario and take_anno.get("scenario") != args.scenario:
+        scenario = take_anno.get("scenario")
+        if args.scenarios and scenario not in args.scenarios:
             continue
+        if args.max_takes_per_scenario is not None:
+            used = takes_used_per_scenario.get(scenario, 0)
+            if used >= args.max_takes_per_scenario:
+                continue
+            takes_used_per_scenario[scenario] = used + 1
 
         take_atomic_records = atomic_annos.get(take_uid, [])
         take_cache = {}
@@ -205,6 +224,8 @@ def main():
         json.dump(cache, f, indent=2)
 
     print(f"Wrote {n_done} labeled segments ({n_failed} failed) across {len(cache)} takes to {args.output}")
+    if takes_used_per_scenario:
+        print(f"Takes used per scenario: {takes_used_per_scenario}")
     if args.model == MODEL:
         cost = (total_input_tokens / 1e6) * HAIKU_INPUT_PER_MTOK + (total_output_tokens / 1e6) * HAIKU_OUTPUT_PER_MTOK
         print(
