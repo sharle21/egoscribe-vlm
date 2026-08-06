@@ -12,8 +12,12 @@ from src.schema import HandObjectInteraction
 def run_egoscribe_inference():
     # 1. Initialize the SGLang local hardware execution engine
     # SGLang automatically targets your CUDA runtime, applying FlashInfer kernel accelerations
-    model_path = "XiaomiMiMo/MiMo-VL-7B-RL" 
-    
+    # ADR-0001: Qwen2.5-VL, not MiMo-VL. Base checkpoint here, not the Unsloth training quant
+    # (bitsandbytes 4-bit isn't the format SGLang expects) — once a strategy is trained
+    # (train.py), this should point at the merged fine-tuned checkpoint instead of the base
+    # model (tracked in tasks.md).
+    model_path = "Qwen/Qwen2.5-VL-7B-Instruct"
+
     print("Initializing SGLang Runtime Engine on Lambda Hardware...")
     runtime = sgl.Runtime(
         model_path=model_path,
@@ -25,7 +29,7 @@ def run_egoscribe_inference():
     print("Engine online. System optimized.")
 
     # 2. Define our SGLang Generation Template Function
-    # The 'thinking' capabilities of MiMo-VL are natively captured here
+    # Reasoning is elicited via the <think> prompt instruction below, not a model-native trait
     @sgl.function
     def analyze_industrial_feed(s, video_frames, pydantic_schema_json):
         # Insert the multimodal image sequence into the context state
@@ -50,7 +54,7 @@ def run_egoscribe_inference():
 
     # 3. Simulate an Egocentric Video Stream Ingestion
     # Open an industrial action clip, sampling frames to pass to the engine
-    video_path = "data/samples/sample_assembly_clip.mp4"
+    video_path = "data/samples/4.mp4"  # toy sample; swap once real checkpoints exist
     cap = cv2.VideoCapture(video_path)
     sampled_frames = []
     
@@ -72,7 +76,7 @@ def run_egoscribe_inference():
     schema_dump = json.dumps(HandObjectInteraction.model_json_schema(), indent=2)
 
     # 5. Trigger the Parallel Inference Pipeline Execution
-    print("Passing Video Timeline to MiMo-VL-7B-RL + SGLang Guided Backend...")
+    print("Passing Video Timeline to Qwen2.5-VL-7B-Instruct + SGLang Guided Backend...")
     state = analyze_industrial_feed.run(
         video_frames=sampled_frames,
         pydantic_schema_json=schema_dump
