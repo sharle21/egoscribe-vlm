@@ -66,8 +66,16 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       Surveyed all 17 scenarios in the corpus (668 takes total) to pick these deliberately.
 - [x] Added `--scenarios`/`--max_takes_per_scenario` to both `convert_egoexo4d.py` and
       `llm_label_segments.py` so curated-subset selection is consistent across both scripts
-- [ ] Run `llm_label_segments.py` for real with `--scenarios` + `--max_takes_per_scenario` set
-      per ADR-0004, on the full curated subset (not just a sample)
+- [x] First labeling run (649 segments, 30 takes, $1.21) had a real bug: `llm_label_segments.py`
+      counted takes against the per-scenario cap by scenario name only, not usability — 2 of
+      the 30 curated takes (both Covid-19 scenario) turned out to be among the 18/668 takes
+      missing from `takes.json` entirely (found earlier), so they can never get a video path
+      and the money spent labeling them was wasted (~$0.08). Fixed: `llm_label_segments.py`
+      now takes an optional `--takes_json` and filters out unusable takes (missing from
+      takes.json, or no aria/rgb path) *before* they consume a cap slot, reusing
+      `convert_egoexo4d.py`'s `find_egocentric_relative_path()`.
+- [ ] Rerun `llm_label_segments.py` with `--takes_json` added, to get a clean 30/30 usable-take
+      cache (old `data/converted/llm_labels_cache.json` had 2 dead takes in it)
 - [ ] Run `convert_egoexo4d.py` with the same `--scenarios`/`--max_takes_per_scenario` +
       `--llm_labels_cache` pointing at the labeled cache from the step above
 - [ ] Only now download `--parts takes` for the ~24-30 curated takes' video (not the full corpus)
