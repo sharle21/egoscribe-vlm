@@ -36,6 +36,40 @@ it's identical to A, not cheaper. Redefined D as attention-only across both moda
 trainable params than A (no MLP), but broader scope than B/C (spans both layer types) — a
 genuinely distinct fourth point in the comparison.
 
+## Interpretation (how far the 4 arms can be pushed)
+
+The 4 arms are NOT a clean factorial and must not be written up as one ranked ablation. They
+answer overlapping questions:
+
+- **B vs C** — vision vs language adaptation (the core research question).
+- **A vs D** — incremental value of MLP adapters vs attention-only. This is D's specific job:
+  test whether attention-only LoRA across both vision and language layers captures most of the
+  benefit of full broad LoRA.
+- **A vs B/C/D** — broad vs restricted adaptation.
+
+Caveats that bound every claim, D's especially:
+
+- **Param-count confound.** A/B/C/D differ in trainable-parameter *count* as well as location,
+  so the A–D contrast is confounded with parameter count — report it as *suggestive*, not as a
+  clean isolation of "MLP adapters."
+- **"Cheapest" means parameter-efficient, not runtime-cheaper.** Frozen layers still run the
+  forward pass; the smoke test already showed B's wall-time gain over A was modest. Actual
+  cost/step must be *measured* on the L4, never inferred from param count.
+- **The statistical unit is the take, not the segment.** Eval is 110 segments but only 6
+  held-out takes; segments from one take are correlated. Metrics must be aggregated and
+  bootstrapped at the take level (see `src/eval/metrics.py`), and at n=6 takes the CIs are wide
+  by construction — treat them as an honesty instrument, not a significance test.
+- **Literature prior is motivation, not evidence.** "Attention-only often captures most gains"
+  justifies running D; it does not establish the result for Qwen2.5-VL on egocentric video with
+  these weak labels.
+
+Standing writeup framing for D:
+
+> Strategy D tests whether attention-only LoRA across both vision and language layers provides
+> most of the benefit of full broad LoRA. The A–D contrast estimates the incremental value of
+> adding MLP adapters, but is confounded with trainable parameter count and should be
+> interpreted as suggestive.
+
 ## Consequences
 
 - Each strategy is implemented as a named config in `train.py`, not a separate script
