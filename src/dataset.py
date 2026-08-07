@@ -12,8 +12,12 @@ import json
 USER_PROMPT_TEXT = (
     "Analyze this egocentric video sequence. "
     "Identify the active tool, target object, action verb, "
-    "and whether a permanent point-of-no-return state change has occurred. "
-    "Output your final answer strictly adhering to this JSON schema."
+    "whether a permanent point-of-no-return state change has occurred, and the current state. "
+    "Return exactly one JSON object with these six keys: "
+    "tool_detected (string or null), target_object (string), action_verb (string), "
+    "point_of_no_return_detected (boolean), current_state (string), and "
+    "safety_gear_missing (array of strings). "
+    "Do not omit any key, add extra keys, or include prose outside the JSON object."
 )
 
 
