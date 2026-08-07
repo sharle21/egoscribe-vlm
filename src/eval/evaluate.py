@@ -30,6 +30,7 @@ from pathlib import Path
 
 import torch
 from decord import VideoReader, cpu
+from peft import PeftModel
 from unsloth import FastVisionModel
 
 from src.dataset import build_user_messages, sample_frame_indices
@@ -58,7 +59,9 @@ def load_model(adapter):
     model, processor = FastVisionModel.from_pretrained(MODEL_ID, load_in_4bit=True)
     if adapter:
         # Adapters saved by train.py via peft save_pretrained; load them back onto the base.
-        model.load_adapter(adapter)
+        # Transformers' generic load_adapter path currently does not recognize the
+        # qwen2_vl PEFT config, so use PEFT's direct loader instead.
+        model = PeftModel.from_pretrained(model, adapter)
     FastVisionModel.for_inference(model)
     return model, processor
 
@@ -102,7 +105,7 @@ def main():
 
     model, processor = load_model(args.adapter)
 
-    preds, golds, per_record = [], [], []
+    preds, golds, take_ids, per_record = [], [], [], []
     for i, item in enumerate(records):
         raw = generate_one(model, processor, item, args.video_dir, args)
         parsed = extract_json(raw)
@@ -116,6 +119,8 @@ def main():
         if valid:
             preds.append(parsed)
             golds.append(item["expected_output"])
+            # take_uid == first path component of video_file; the real statistical unit (ADR-0002).
+            take_ids.append(item["video_file"].split("/", 1)[0])
         per_record.append({
             "video_file": item["video_file"],
             "gold": item["expected_output"],
@@ -125,7 +130,7 @@ def main():
         })
         print(f"[{i + 1}/{len(records)}] {item['video_file']} valid={valid}")
 
-    metrics = compute_metrics(preds, golds, num_total=len(records))
+    metrics = compute_metrics(preds, golds, num_total=len(records), take_ids=take_ids)
 
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     with open(args.out, "w") as f:
