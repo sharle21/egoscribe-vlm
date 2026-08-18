@@ -1,0 +1,2415 @@
+{
+  "config": {
+    "adapter": "saved_egoscribe_adapters/strategy_B",
+    "annotations": "data/converted/annotations_eval.json",
+    "num_frames": 8,
+    "model_id": "unsloth/Qwen2.5-VL-7B-Instruct-unsloth-bnb-4bit"
+  },
+  "metrics": {
+    "num_total": 110,
+    "num_parsed": 110,
+    "schema_validity_rate": 1.0,
+    "tool_detected": {
+      "exact_match": 0.7181818181818181,
+      "token_f1": 0.7424242424242424
+    },
+    "target_object": {
+      "exact_match": 0.08181818181818182,
+      "token_f1": 0.22659283112984213
+    },
+    "action_verb": {
+      "exact_match": 0.06363636363636363,
+      "token_f1": 0.10504329004329005
+    },
+    "current_state": {
+      "exact_match": 0.00909090909090909,
+      "token_f1": 0.085003885003885
+    },
+    "point_of_no_return_detected": {
+      "precision": 0.3333333333333333,
+      "recall": 0.4,
+      "f1": 0.3636363636363636,
+      "accuracy": 0.9363636363636364,
+      "support_positive": 5
+    },
+    "safety_gear_missing": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support_gold_items": 0
+    },
+    "bootstrap": {
+      "n_takes": 6,
+      "n_boot": 1000,
+      "ci_95": {
+        "tool_detected.exact_match": [
+          0.6262,
+          0.8173
+        ],
+        "tool_detected.token_f1": [
+          0.6464,
+          0.851
+        ],
+        "target_object.exact_match": [
+          0.028,
+          0.1515
+        ],
+        "target_object.token_f1": [
+          0.1431,
+          0.3551
+        ],
+        "action_verb.exact_match": [
+          0.0322,
+          0.1047
+        ],
+        "action_verb.token_f1": [
+          0.0601,
+          0.1633
+        ],
+        "current_state.exact_match": [
+          0.0,
+          0.0319
+        ],
+        "current_state.token_f1": [
+          0.0307,
+          0.1796
+        ],
+        "point_of_no_return_detected.f1": [
+          0.0,
+          0.6667
+        ],
+        "point_of_no_return_detected.accuracy": [
+          0.8906,
+          0.9896
+        ],
+        "safety_gear_missing.f1": [
+          0.0,
+          0.0
+        ]
+      },
+      "note": "95% CI from block bootstrap over takes; wide at this n by design."
+    }
+  },
+  "predictions": [
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid-19 test box and its contents (test tube pack, test cassette, test swab pack)",
+        "action_verb": "unboxing and arranging",
+        "point_of_no_return_detected": false,
+        "current_state": "arranged on table",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"COVID-19 test kit\", \"action_verb\": \"opening box\", \"point_of_no_return_detected\": false, \"current_state\": \"box opened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "COVID-19 test kit",
+        "action_verb": "opening box",
+        "point_of_no_return_detected": false,
+        "current_state": "box opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test cassette",
+        "action_verb": "unwrapping and removing",
+        "point_of_no_return_detected": false,
+        "current_state": "unwrapped and removed from pack",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test kit\", \"action_verb\": \"unboxing\", \"point_of_no_return_detected\": false, \"current_state\": \"test kit components laid out on table\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test kit",
+        "action_verb": "unboxing",
+        "point_of_no_return_detected": false,
+        "current_state": "test kit components laid out on table",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "micro test tube",
+        "action_verb": "removing from pack",
+        "point_of_no_return_detected": false,
+        "current_state": "unwrapped",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"opening\", \"point_of_no_return_detected\": false, \"current_state\": \"opened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "opening",
+        "point_of_no_return_detected": false,
+        "current_state": "opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "micro test tube pack",
+        "action_verb": "returning",
+        "point_of_no_return_detected": false,
+        "current_state": "stored",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"placing\", \"point_of_no_return_detected\": false, \"current_state\": \"in box\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "placing",
+        "point_of_no_return_detected": false,
+        "current_state": "in box",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "collection swab",
+        "action_verb": "unwrapping",
+        "point_of_no_return_detected": false,
+        "current_state": "unwrapped",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test kit components\", \"action_verb\": \"unwrapping\", \"point_of_no_return_detected\": false, \"current_state\": \"unpacked\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test kit components",
+        "action_verb": "unwrapping",
+        "point_of_no_return_detected": false,
+        "current_state": "unpacked",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test swab",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "inserted into nostril",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"inserting swab into test tube\", \"point_of_no_return_detected\": false, \"current_state\": \"swab in test tube\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "inserting swab into test tube",
+        "point_of_no_return_detected": false,
+        "current_state": "swab in test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test swab",
+        "action_verb": "rotating and swirling",
+        "point_of_no_return_detected": false,
+        "current_state": "immersed in solution",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test swab\", \"action_verb\": \"inserting\", \"point_of_no_return_detected\": false, \"current_state\": \"test swab in mouth\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test swab",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "test swab in mouth",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "collection swab",
+        "action_verb": "extracting",
+        "point_of_no_return_detected": false,
+        "current_state": "extracted",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"cotton swab\", \"action_verb\": \"inserting\", \"point_of_no_return_detected\": false, \"current_state\": \"cotton swab inserted into test tube\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "cotton swab",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "cotton swab inserted into test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test swab",
+        "action_verb": "inserting and rotating",
+        "point_of_no_return_detected": false,
+        "current_state": "inserted in nostrils",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding test tube\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "test tube seal",
+        "action_verb": "unsealing",
+        "point_of_no_return_detected": false,
+        "current_state": "open",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding test tube\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test swab",
+        "action_verb": "dipping",
+        "point_of_no_return_detected": false,
+        "current_state": "inserted into test tube",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding test tube\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test swab",
+        "action_verb": "rotating and swirling",
+        "point_of_no_return_detected": false,
+        "current_state": "immersed in solution",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"opening\", \"point_of_no_return_detected\": false, \"current_state\": \"opened\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "opening",
+        "point_of_no_return_detected": false,
+        "current_state": "opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test cassette pack with used materials (micro test tube, swab pack tip, swab pack, micro tube seal, silica gel)",
+        "action_verb": "arranging and placing waste materials",
+        "point_of_no_return_detected": false,
+        "current_state": "packed with used materials for disposal",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"inserting swab into test tube\", \"point_of_no_return_detected\": false, \"current_state\": \"swab in test tube\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "inserting swab into test tube",
+        "point_of_no_return_detected": false,
+        "current_state": "swab in test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "micro test tube cap",
+        "target_object": "micro test tube",
+        "action_verb": "covering",
+        "point_of_no_return_detected": false,
+        "current_state": "closed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding test tube\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "micro test tube",
+        "action_verb": "shaking",
+        "point_of_no_return_detected": false,
+        "current_state": "mixed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding test tube\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "micro test tube",
+        "target_object": "testing plate / covid test cassette",
+        "action_verb": "applying / dispensing solution",
+        "point_of_no_return_detected": false,
+        "current_state": "solution applied",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding test tube\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test cassette",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "repositioned",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test kit components\", \"action_verb\": \"arranging\", \"point_of_no_return_detected\": false, \"current_state\": \"organized on table\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test kit components",
+        "action_verb": "arranging",
+        "point_of_no_return_detected": false,
+        "current_state": "organized on table",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "georgiatech_covid_12_3/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "covid test cassette pack with used materials (micro test tube, swab pack tip, swab pack, micro tube seal, silica gel)",
+        "action_verb": "arranging and placing waste materials",
+        "point_of_no_return_detected": false,
+        "current_state": "packed with used materials for disposal",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"test kit\", \"action_verb\": \"opening test kit components\", \"point_of_no_return_detected\": false, \"current_state\": \"test kit components opened\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test kit",
+        "action_verb": "opening test kit components",
+        "point_of_no_return_detected": false,
+        "current_state": "test kit components opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "Covid-19 Rapid Antigen Test package",
+        "action_verb": "unboxing",
+        "point_of_no_return_detected": false,
+        "current_state": "open",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"COVID-19 test kit\", \"action_verb\": \"opening box\", \"point_of_no_return_detected\": false, \"current_state\": \"box opened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "COVID-19 test kit",
+        "action_verb": "opening box",
+        "point_of_no_return_detected": false,
+        "current_state": "box opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "test material (extraction buffer tube, nasal swab pack, test cassette pack, nylon bag)",
+        "action_verb": "arranging and placing",
+        "point_of_no_return_detected": false,
+        "current_state": "arranged on table",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"COVID-19 test kit\", \"action_verb\": \"opening\", \"point_of_no_return_detected\": false, \"current_state\": \"opened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "COVID-19 test kit",
+        "action_verb": "opening",
+        "point_of_no_return_detected": false,
+        "current_state": "opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "instructions paper and nasal swab",
+        "action_verb": "reading and inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "instructions read, nasal swab inserted",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"instruction manual\", \"action_verb\": \"reading\", \"point_of_no_return_detected\": false, \"current_state\": \"being read\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "instruction manual",
+        "action_verb": "reading",
+        "point_of_no_return_detected": false,
+        "current_state": "being read",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "extraction buffer tube",
+        "action_verb": "positioning",
+        "point_of_no_return_detected": false,
+        "current_state": "positioned",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"blue box\", \"action_verb\": \"opening\", \"point_of_no_return_detected\": false, \"current_state\": \"opened\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "blue box",
+        "action_verb": "opening",
+        "point_of_no_return_detected": false,
+        "current_state": "opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "test tube seal",
+        "action_verb": "removing",
+        "point_of_no_return_detected": false,
+        "current_state": "open",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"needle\", \"target_object\": \"bandage\", \"action_verb\": \"inserting\", \"point_of_no_return_detected\": false, \"current_state\": \"bandaged\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "needle",
+        "target_object": "bandage",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "bandaged",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "instruction paper",
+        "action_verb": "arranging",
+        "point_of_no_return_detected": false,
+        "current_state": "disposed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"scissors\", \"target_object\": \"hair\", \"action_verb\": \"cutting\", \"point_of_no_return_detected\": true, \"current_state\": \"shorter\", \"safety_gear_missing\": [\"scissors\"]}",
+      "parsed": {
+        "tool_detected": "scissors",
+        "target_object": "hair",
+        "action_verb": "cutting",
+        "point_of_no_return_detected": true,
+        "current_state": "shorter",
+        "safety_gear_missing": [
+          "scissors"
+        ]
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "nasal swab",
+        "action_verb": "unwrapping",
+        "point_of_no_return_detected": false,
+        "current_state": "unwrapped",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"scissors\", \"target_object\": \"cardboard\", \"action_verb\": \"cutting\", \"point_of_no_return_detected\": false, \"current_state\": \"cut\", \"safety_gear_missing\": [\"scissors\"]}",
+      "parsed": {
+        "tool_detected": "scissors",
+        "target_object": "cardboard",
+        "action_verb": "cutting",
+        "point_of_no_return_detected": false,
+        "current_state": "cut",
+        "safety_gear_missing": [
+          "scissors"
+        ]
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "instructions paper and nasal swab",
+        "action_verb": "reading and inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "instructions read, nasal swab inserted",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"eyeglasses case\", \"action_verb\": \"opening\", \"point_of_no_return_detected\": false, \"current_state\": \"open\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "eyeglasses case",
+        "action_verb": "opening",
+        "point_of_no_return_detected": false,
+        "current_state": "open",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "nasal swab",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "inserted",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"COVID-19 test kit\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"being held by hand\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "COVID-19 test kit",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "being held by hand",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "nasal swab",
+        "action_verb": "rotating and swirling",
+        "point_of_no_return_detected": false,
+        "current_state": "swab in extraction buffer tube with stirred antigen solution",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pipette\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pipette",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "sterile swab",
+        "action_verb": "extracting",
+        "point_of_no_return_detected": false,
+        "current_state": "removed from nostril",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pipette\", \"action_verb\": \"holding\", \"point_of_no_return_detected\": false, \"current_state\": \"holding pipette\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pipette",
+        "action_verb": "holding",
+        "point_of_no_return_detected": false,
+        "current_state": "holding pipette",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "nasal swab",
+        "target_object": "nasal swab",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "inserted in nostril",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"COVID-19 test kit\", \"action_verb\": \"unboxing\", \"point_of_no_return_detected\": false, \"current_state\": \"in progress\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "COVID-19 test kit",
+        "action_verb": "unboxing",
+        "point_of_no_return_detected": false,
+        "current_state": "in progress",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "nasal swab",
+        "action_verb": "dipping",
+        "point_of_no_return_detected": false,
+        "current_state": "dipped in extraction buffer",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"scissors\", \"target_object\": \"package\", \"action_verb\": \"cutting\", \"point_of_no_return_detected\": true, \"current_state\": \"opened\", \"safety_gear_missing\": [\"scissors\"]}",
+      "parsed": {
+        "tool_detected": "scissors",
+        "target_object": "package",
+        "action_verb": "cutting",
+        "point_of_no_return_detected": true,
+        "current_state": "opened",
+        "safety_gear_missing": [
+          "scissors"
+        ]
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "nasal swab",
+        "action_verb": "rotating and swirling",
+        "point_of_no_return_detected": false,
+        "current_state": "swab in extraction buffer tube with stirred antigen solution",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test kit\", \"action_verb\": \"unwrapping\", \"point_of_no_return_detected\": false, \"current_state\": \"unwrapped\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test kit",
+        "action_verb": "unwrapping",
+        "point_of_no_return_detected": false,
+        "current_state": "unwrapped",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "covering",
+        "point_of_no_return_detected": false,
+        "current_state": "covered",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test tube\", \"action_verb\": \"inserting swab into test tube\", \"point_of_no_return_detected\": false, \"current_state\": \"swab in test tube\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test tube",
+        "action_verb": "inserting swab into test tube",
+        "point_of_no_return_detected": false,
+        "current_state": "swab in test tube",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "extraction buffer tube",
+        "action_verb": "positioning",
+        "point_of_no_return_detected": false,
+        "current_state": "positioned",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"cotton swab\", \"action_verb\": \"inserting\", \"point_of_no_return_detected\": false, \"current_state\": \"in the ear canal\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "cotton swab",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "in the ear canal",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "instruction paper",
+        "action_verb": "arranging",
+        "point_of_no_return_detected": false,
+        "current_state": "disposed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"cotton swab\", \"action_verb\": \"inserting\", \"point_of_no_return_detected\": false, \"current_state\": \"in the nose\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "cotton swab",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "in the nose",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "extraction buffer tube",
+        "action_verb": "shaking",
+        "point_of_no_return_detected": false,
+        "current_state": "shaken",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"instruction manual\", \"action_verb\": \"reading\", \"point_of_no_return_detected\": false, \"current_state\": \"being read\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "instruction manual",
+        "action_verb": "reading",
+        "point_of_no_return_detected": false,
+        "current_state": "being read",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "test cassette",
+        "action_verb": "unwrapping",
+        "point_of_no_return_detected": false,
+        "current_state": "unwrapped",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"instruction manual\", \"action_verb\": \"reading\", \"point_of_no_return_detected\": false, \"current_state\": \"reviewing instructions\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "instruction manual",
+        "action_verb": "reading",
+        "point_of_no_return_detected": false,
+        "current_state": "reviewing instructions",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "extraction buffer tube",
+        "action_verb": "shaking",
+        "point_of_no_return_detected": false,
+        "current_state": "shaken",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"instruction manual\", \"action_verb\": \"pointing at text\", \"point_of_no_return_detected\": false, \"current_state\": \"reading\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "instruction manual",
+        "action_verb": "pointing at text",
+        "point_of_no_return_detected": false,
+        "current_state": "reading",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "test cassette",
+        "action_verb": "adding",
+        "point_of_no_return_detected": false,
+        "current_state": "solution applied",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"test kit\", \"action_verb\": \"unwrapping\", \"point_of_no_return_detected\": false, \"current_state\": \"unwrapped\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "test kit",
+        "action_verb": "unwrapping",
+        "point_of_no_return_detected": false,
+        "current_state": "unwrapped",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "instruction paper",
+        "action_verb": "arranging",
+        "point_of_no_return_detected": false,
+        "current_state": "disposed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"instruction manual\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"on table\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "instruction manual",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "on table",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "instruction paper",
+        "action_verb": "folding",
+        "point_of_no_return_detected": false,
+        "current_state": "folded",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"hair\", \"action_verb\": \"combing\", \"point_of_no_return_detected\": false, \"current_state\": \"smoothed\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "hair",
+        "action_verb": "combing",
+        "point_of_no_return_detected": false,
+        "current_state": "smoothed",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "nus_covidtest_18_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "instruction paper",
+        "action_verb": "arranging",
+        "point_of_no_return_detected": false,
+        "current_state": "disposed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"Flowflex box\", \"action_verb\": \"opening\", \"point_of_no_return_detected\": false, \"current_state\": \"opened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "Flowflex box",
+        "action_verb": "opening",
+        "point_of_no_return_detected": false,
+        "current_state": "opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": "tire lever",
+        "target_object": "inner tube",
+        "action_verb": "unseating with tire lever",
+        "point_of_no_return_detected": false,
+        "current_state": "removed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"fitting tire onto rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire is being fitted onto rim\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "fitting tire onto rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire is being fitted onto rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "inner tube",
+        "action_verb": "pulling out",
+        "point_of_no_return_detected": false,
+        "current_state": "removed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"fitting tire onto rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire is being fitted onto rim\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "fitting tire onto rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire is being fitted onto rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "tire and rim",
+        "action_verb": "inspecting for damage",
+        "point_of_no_return_detected": false,
+        "current_state": "inspected",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"fitting tire onto rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire is being fitted onto rim\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "fitting tire onto rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire is being fitted onto rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "bead",
+        "action_verb": "pulling back and lifting",
+        "point_of_no_return_detected": false,
+        "current_state": "removed from rim",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"removing tire from rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire removed from rim\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "removing tire from rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire removed from rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "rim and bead seat line",
+        "action_verb": "inspecting and adjusting",
+        "point_of_no_return_detected": false,
+        "current_state": "inspected",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"red screwdriver\", \"target_object\": \"box\", \"action_verb\": \"placed\", \"point_of_no_return_detected\": false, \"current_state\": \"on top of box\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "red screwdriver",
+        "target_object": "box",
+        "action_verb": "placed",
+        "point_of_no_return_detected": false,
+        "current_state": "on top of box",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "tire and rim",
+        "action_verb": "inspecting for damage",
+        "point_of_no_return_detected": false,
+        "current_state": "inspected",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"removing tire from wheel\", \"point_of_no_return_detected\": false, \"current_state\": \"tire removed from wheel\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "removing tire from wheel",
+        "point_of_no_return_detected": false,
+        "current_state": "tire removed from wheel",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "tire and wheel",
+        "action_verb": "fitting",
+        "point_of_no_return_detected": false,
+        "current_state": "fitted",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"mounting tire on rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire mounted on rim\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "mounting tire on rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire mounted on rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "inner tube",
+        "action_verb": "picking",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"glove\", \"action_verb\": \"wearing\", \"point_of_no_return_detected\": false, \"current_state\": \"wearing glove\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "glove",
+        "action_verb": "wearing",
+        "point_of_no_return_detected": false,
+        "current_state": "wearing glove",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "dust cap and valve nut",
+        "action_verb": "unscrewing and removing",
+        "point_of_no_return_detected": false,
+        "current_state": "removed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"screwdriver\", \"target_object\": \"bike tire\", \"action_verb\": \"tightening\", \"point_of_no_return_detected\": false, \"current_state\": \"tire tightened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "screwdriver",
+        "target_object": "bike tire",
+        "action_verb": "tightening",
+        "point_of_no_return_detected": false,
+        "current_state": "tire tightened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": "bike pump",
+        "target_object": "inner tube",
+        "action_verb": "inflating",
+        "point_of_no_return_detected": false,
+        "current_state": "inflated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"pump\", \"target_object\": \"tire\", \"action_verb\": \"inflating\", \"point_of_no_return_detected\": false, \"current_state\": \"inflated\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "pump",
+        "target_object": "tire",
+        "action_verb": "inflating",
+        "point_of_no_return_detected": false,
+        "current_state": "inflated",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "inner tube and bicycle wheel",
+        "action_verb": "fitting and seating",
+        "point_of_no_return_detected": false,
+        "current_state": "tube fitted and seated in the tire rim",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"fitting tire onto rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire partially fitted onto rim\", \"safety_gear_missing\": [\"gloves\"]} \n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "fitting tire onto rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire partially fitted onto rim",
+        "safety_gear_missing": [
+          "gloves"
+        ]
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "valve nut",
+        "action_verb": "screwing and tightening",
+        "point_of_no_return_detected": false,
+        "current_state": "attached",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"tire valve\", \"action_verb\": \"tightening\", \"point_of_no_return_detected\": false, \"current_state\": \"securely attached\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire valve",
+        "action_verb": "tightening",
+        "point_of_no_return_detected": false,
+        "current_state": "securely attached",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_02_7/frame_aligned_videos/downscaled/448/aria02_214-1.mp4",
+      "gold": {
+        "tool_detected": "bike pump",
+        "target_object": "bicycle wheel",
+        "action_verb": "inflating",
+        "point_of_no_return_detected": false,
+        "current_state": "fully inflated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"pump\", \"target_object\": \"tire\", \"action_verb\": \"inflating\", \"point_of_no_return_detected\": false, \"current_state\": \"inflated\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "pump",
+        "target_object": "tire",
+        "action_verb": "inflating",
+        "point_of_no_return_detected": false,
+        "current_state": "inflated",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "valve stem",
+        "action_verb": "pulling out",
+        "point_of_no_return_detected": false,
+        "current_state": "removed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"removing tire from rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire removed from rim\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "removing tire from rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire removed from rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "inner tube",
+        "action_verb": "pulling out",
+        "point_of_no_return_detected": false,
+        "current_state": "removed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"removing inner tube\", \"point_of_no_return_detected\": false, \"current_state\": \"inner tube removed\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "removing inner tube",
+        "point_of_no_return_detected": false,
+        "current_state": "inner tube removed",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "inspecting",
+        "point_of_no_return_detected": false,
+        "current_state": "inspected",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"removing from rim\", \"point_of_no_return_detected\": false, \"current_state\": \"removed\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "removing from rim",
+        "point_of_no_return_detected": false,
+        "current_state": "removed",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "inner tube",
+        "action_verb": "unpacking",
+        "point_of_no_return_detected": false,
+        "current_state": "unpacked",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"inner tube\", \"action_verb\": \"unboxing and attaching\", \"point_of_no_return_detected\": false, \"current_state\": \"attached to wheel\", \"safety_gear_missing\": [\"gloves\"]}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "inner tube",
+        "action_verb": "unboxing and attaching",
+        "point_of_no_return_detected": false,
+        "current_state": "attached to wheel",
+        "safety_gear_missing": [
+          "gloves"
+        ]
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "valve cap",
+        "action_verb": "unscrewing",
+        "point_of_no_return_detected": false,
+        "current_state": "removed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire valve\", \"action_verb\": \"tightening\", \"point_of_no_return_detected\": false, \"current_state\": \"securely tightened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire valve",
+        "action_verb": "tightening",
+        "point_of_no_return_detected": false,
+        "current_state": "securely tightened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": "air pump",
+        "target_object": "valve stem",
+        "action_verb": "withdrawing",
+        "point_of_no_return_detected": false,
+        "current_state": "partially inflated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"pump\", \"target_object\": \"tire\", \"action_verb\": \"inflating\", \"point_of_no_return_detected\": false, \"current_state\": \"inflated\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "pump",
+        "target_object": "tire",
+        "action_verb": "inflating",
+        "point_of_no_return_detected": false,
+        "current_state": "inflated",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "valve stem",
+        "action_verb": "inserting",
+        "point_of_no_return_detected": false,
+        "current_state": "engaged in rim",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"fitting tire onto rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire is being fitted onto rim\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "fitting tire onto rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire is being fitted onto rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "wheel",
+        "action_verb": "turning",
+        "point_of_no_return_detected": false,
+        "current_state": "positioned",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"fitting tire onto rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire is being fitted onto rim\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "fitting tire onto rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire is being fitted onto rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "bike tire",
+        "action_verb": "fitting",
+        "point_of_no_return_detected": false,
+        "current_state": "fitted",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"tire\", \"action_verb\": \"fitting tire onto rim\", \"point_of_no_return_detected\": false, \"current_state\": \"tire fitted onto rim\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "tire",
+        "action_verb": "fitting tire onto rim",
+        "point_of_no_return_detected": false,
+        "current_state": "tire fitted onto rim",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "fair_bike_07_11/frame_aligned_videos/downscaled/448/aria07_214-1.mp4",
+      "gold": {
+        "tool_detected": "bike pump",
+        "target_object": "tire",
+        "action_verb": "inflating",
+        "point_of_no_return_detected": false,
+        "current_state": "fully inflated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": \"pump\", \"target_object\": \"tire\", \"action_verb\": \"inflating\", \"point_of_no_return_detected\": false, \"current_state\": \"inflated\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": "pump",
+        "target_object": "tire",
+        "action_verb": "inflating",
+        "point_of_no_return_detected": false,
+        "current_state": "inflated",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "picking",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"picking up\", \"point_of_no_return_detected\": false, \"current_state\": \"in hand\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "picking up",
+        "point_of_no_return_detected": false,
+        "current_state": "in hand",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking and pouring",
+        "point_of_no_return_detected": true,
+        "current_state": "cracked, separated from shell",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": true, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": true,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking and pouring",
+        "point_of_no_return_detected": true,
+        "current_state": "cracked, separated from shell",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": false, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": false,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "hands",
+        "action_verb": "washing",
+        "point_of_no_return_detected": false,
+        "current_state": "clean",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"washing\", \"point_of_no_return_detected\": false, \"current_state\": \"cleaned\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "washing",
+        "point_of_no_return_detected": false,
+        "current_state": "cleaned",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "salt jar",
+        "target_object": "egg mixture",
+        "action_verb": "adding salt",
+        "point_of_no_return_detected": false,
+        "current_state": "salt added",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"spices\", \"action_verb\": \"adding to egg mixture\", \"point_of_no_return_detected\": false, \"current_state\": \"egg mixture seasoned\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "spices",
+        "action_verb": "adding to egg mixture",
+        "point_of_no_return_detected": false,
+        "current_state": "egg mixture seasoned",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "chili powder",
+        "action_verb": "adding",
+        "point_of_no_return_detected": false,
+        "current_state": "mixed into egg mixture",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": false, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": false,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "skillet",
+        "action_verb": "heating",
+        "point_of_no_return_detected": false,
+        "current_state": "heated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"microwave\", \"action_verb\": \"closed\", \"point_of_no_return_detected\": false, \"current_state\": \"closed\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "microwave",
+        "action_verb": "closed",
+        "point_of_no_return_detected": false,
+        "current_state": "closed",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "oil jar",
+        "action_verb": "picking",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"cabinet\", \"action_verb\": \"opened\", \"point_of_no_return_detected\": false, \"current_state\": \"open\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "cabinet",
+        "action_verb": "opened",
+        "point_of_no_return_detected": false,
+        "current_state": "open",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "oil",
+        "action_verb": "pouring",
+        "point_of_no_return_detected": false,
+        "current_state": "added to skillet",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "```json\n{\"tool_detected\": null, \"target_object\": \"microwave\", \"action_verb\": \"pressing button\", \"point_of_no_return_detected\": false, \"current_state\": \"microwave is on\", \"safety_gear_missing\": []}\n```",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "microwave",
+        "action_verb": "pressing button",
+        "point_of_no_return_detected": false,
+        "current_state": "microwave is on",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "fork",
+        "target_object": "egg mixture",
+        "action_verb": "whisking",
+        "point_of_no_return_detected": false,
+        "current_state": "well integrated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"microwave\", \"action_verb\": \"opening\", \"point_of_no_return_detected\": false, \"current_state\": \"open\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "microwave",
+        "action_verb": "opening",
+        "point_of_no_return_detected": false,
+        "current_state": "open",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "skillet",
+        "action_verb": "rotating",
+        "point_of_no_return_detected": false,
+        "current_state": "tilted and rotated for oil distribution",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pan\", \"action_verb\": \"placing on stove\", \"point_of_no_return_detected\": false, \"current_state\": \"on stove\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pan",
+        "action_verb": "placing on stove",
+        "point_of_no_return_detected": false,
+        "current_state": "on stove",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "fork",
+        "target_object": "egg mixture",
+        "action_verb": "pouring",
+        "point_of_no_return_detected": false,
+        "current_state": "poured into skillet",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"egg\", \"action_verb\": \"cooking\", \"point_of_no_return_detected\": false, \"current_state\": \"being cooked\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "egg",
+        "action_verb": "cooking",
+        "point_of_no_return_detected": false,
+        "current_state": "being cooked",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "fork",
+        "target_object": "skillet",
+        "action_verb": "tilt and rotate",
+        "point_of_no_return_detected": false,
+        "current_state": "egg spread into empty spaces",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in use\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in use",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "fork",
+        "target_object": "eggs",
+        "action_verb": "pushing",
+        "point_of_no_return_detected": false,
+        "current_state": "partially cooked",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"egg\", \"target_object\": \"pan\", \"action_verb\": \"stirring\", \"point_of_no_return_detected\": false, \"current_state\": \"cooking\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "egg",
+        "target_object": "pan",
+        "action_verb": "stirring",
+        "point_of_no_return_detected": false,
+        "current_state": "cooking",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "cooker",
+        "action_verb": "adjusting temperature",
+        "point_of_no_return_detected": false,
+        "current_state": "temperature regulated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"stovetop\", \"action_verb\": \"moving pan\", \"point_of_no_return_detected\": false, \"current_state\": \"pan moved\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "stovetop",
+        "action_verb": "moving pan",
+        "point_of_no_return_detected": false,
+        "current_state": "pan moved",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "plate",
+        "action_verb": "picking up and placing",
+        "point_of_no_return_detected": false,
+        "current_state": "placed on countertop",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"on stove\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "on stove",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spatula",
+        "target_object": "omelet",
+        "action_verb": "flipping",
+        "point_of_no_return_detected": false,
+        "current_state": "flipped and cooking on the other side",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in use\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in use",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "electric stove",
+        "action_verb": "turning off",
+        "point_of_no_return_detected": false,
+        "current_state": "off",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"oven\", \"action_verb\": \"pressing buttons\", \"point_of_no_return_detected\": false, \"current_state\": \"oven turned on\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "oven",
+        "action_verb": "pressing buttons",
+        "point_of_no_return_detected": false,
+        "current_state": "oven turned on",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "sfu_cooking029_8/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spatula",
+        "target_object": "omelet",
+        "action_verb": "transferring",
+        "point_of_no_return_detected": false,
+        "current_state": "transferred to plate",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in use\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in use",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "lighter",
+        "target_object": "stove",
+        "action_verb": "turning on",
+        "point_of_no_return_detected": false,
+        "current_state": "on",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"gas stove\", \"action_verb\": \"igniting\", \"point_of_no_return_detected\": true, \"current_state\": \"ignited\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "gas stove",
+        "action_verb": "igniting",
+        "point_of_no_return_detected": true,
+        "current_state": "ignited",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spatula",
+        "target_object": "skillet",
+        "action_verb": "getting and placing",
+        "point_of_no_return_detected": false,
+        "current_state": "positioned on cooker",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"on counter\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "on counter",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "bowl",
+        "action_verb": "taking",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"spatula\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in use\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "spatula",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in use",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "knife",
+        "target_object": "knife",
+        "action_verb": "taking",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"spatula\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in hand\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "spatula",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in hand",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "onion",
+        "action_verb": "taking",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"on stove\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "on stove",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "knife",
+        "target_object": "onion",
+        "action_verb": "peeling",
+        "point_of_no_return_detected": false,
+        "current_state": "peeled",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": false, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": false,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "onion",
+        "action_verb": "slicing",
+        "point_of_no_return_detected": true,
+        "current_state": "sliced",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"spices\", \"action_verb\": \"adding\", \"point_of_no_return_detected\": false, \"current_state\": \"mixed\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "spices",
+        "action_verb": "adding",
+        "point_of_no_return_detected": false,
+        "current_state": "mixed",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "green chili",
+        "action_verb": "picking up",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"spatula\", \"action_verb\": \"retrieved\", \"point_of_no_return_detected\": false, \"current_state\": \"in hand\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "spatula",
+        "action_verb": "retrieved",
+        "point_of_no_return_detected": false,
+        "current_state": "in hand",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "knife",
+        "target_object": "green chili",
+        "action_verb": "cutting",
+        "point_of_no_return_detected": true,
+        "current_state": "cut",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": false, \"current_state\": \"broken egg in bowl\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": false,
+        "current_state": "broken egg in bowl",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "taking",
+        "point_of_no_return_detected": false,
+        "current_state": "transferred to left hand",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": false, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": false,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "knife",
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": true,
+        "current_state": "cracked",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"knife\", \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": true, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "knife",
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": true,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "container with dried herbs",
+        "action_verb": "taking and opening",
+        "point_of_no_return_detected": false,
+        "current_state": "open",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"salt\", \"action_verb\": \"opening a salt container\", \"point_of_no_return_detected\": false, \"current_state\": \"salt container opened\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "salt",
+        "action_verb": "opening a salt container",
+        "point_of_no_return_detected": false,
+        "current_state": "salt container opened",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "dried herbs",
+        "action_verb": "adding",
+        "point_of_no_return_detected": false,
+        "current_state": "mixed",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"cracking\", \"point_of_no_return_detected\": false, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "cracking",
+        "point_of_no_return_detected": false,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spoon",
+        "target_object": "egg mixture",
+        "action_verb": "whisking",
+        "point_of_no_return_detected": false,
+        "current_state": "well integrated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"beating\", \"point_of_no_return_detected\": false, \"current_state\": \"being beaten\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "beating",
+        "point_of_no_return_detected": false,
+        "current_state": "being beaten",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "oil sachet",
+        "action_verb": "taking",
+        "point_of_no_return_detected": false,
+        "current_state": "obtained",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"on stove\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "on stove",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "skillet",
+        "action_verb": "pouring oil",
+        "point_of_no_return_detected": false,
+        "current_state": "greased",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"stirring\", \"point_of_no_return_detected\": false, \"current_state\": \"being stirred\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "stirring",
+        "point_of_no_return_detected": false,
+        "current_state": "being stirred",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spoon",
+        "target_object": "egg mixture",
+        "action_verb": "whisking",
+        "point_of_no_return_detected": false,
+        "current_state": "well integrated",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spoon\", \"target_object\": \"egg\", \"action_verb\": \"beating\", \"point_of_no_return_detected\": false, \"current_state\": \"being beaten\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spoon",
+        "target_object": "egg",
+        "action_verb": "beating",
+        "point_of_no_return_detected": false,
+        "current_state": "being beaten",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spoon",
+        "target_object": "egg mixture",
+        "action_verb": "pouring",
+        "point_of_no_return_detected": false,
+        "current_state": "poured into skillet",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in use\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in use",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "cloth",
+        "target_object": "hands",
+        "action_verb": "wiping",
+        "point_of_no_return_detected": false,
+        "current_state": "clean",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"spatula\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in hand\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "spatula",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in hand",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "spatula",
+        "action_verb": "retrieving",
+        "point_of_no_return_detected": false,
+        "current_state": "retrieved",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in use\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in use",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "plate",
+        "action_verb": "getting",
+        "point_of_no_return_detected": false,
+        "current_state": "obtained",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": null, \"target_object\": \"egg\", \"action_verb\": \"breaking\", \"point_of_no_return_detected\": false, \"current_state\": \"broken\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": null,
+        "target_object": "egg",
+        "action_verb": "breaking",
+        "point_of_no_return_detected": false,
+        "current_state": "broken",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spatula",
+        "target_object": "egg",
+        "action_verb": "flipping",
+        "point_of_no_return_detected": false,
+        "current_state": "cooked on both sides",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"in motion\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "in motion",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "cooker knob",
+        "action_verb": "turning",
+        "point_of_no_return_detected": false,
+        "current_state": "heat adjusted",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"pan\", \"action_verb\": \"moving\", \"point_of_no_return_detected\": false, \"current_state\": \"moving\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "pan",
+        "action_verb": "moving",
+        "point_of_no_return_detected": false,
+        "current_state": "moving",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spatula",
+        "target_object": "egg",
+        "action_verb": "flipping",
+        "point_of_no_return_detected": false,
+        "current_state": "cooked on both sides",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"pan\", \"action_verb\": \"flipping\", \"point_of_no_return_detected\": false, \"current_state\": \"flipped\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "pan",
+        "action_verb": "flipping",
+        "point_of_no_return_detected": false,
+        "current_state": "flipped",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": null,
+        "target_object": "stove knob",
+        "action_verb": "turning off",
+        "point_of_no_return_detected": false,
+        "current_state": "off",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"pan\", \"target_object\": \"omelette\", \"action_verb\": \"flipping\", \"point_of_no_return_detected\": true, \"current_state\": \"flipped\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "pan",
+        "target_object": "omelette",
+        "action_verb": "flipping",
+        "point_of_no_return_detected": true,
+        "current_state": "flipped",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    },
+    {
+      "video_file": "iiith_cooking_81_2/frame_aligned_videos/downscaled/448/aria01_214-1.mp4",
+      "gold": {
+        "tool_detected": "spatula",
+        "target_object": "omelet",
+        "action_verb": "pouring",
+        "point_of_no_return_detected": false,
+        "current_state": "in plate",
+        "safety_gear_missing": []
+      },
+      "raw_generation": "{\"tool_detected\": \"spatula\", \"target_object\": \"pancake\", \"action_verb\": \"transferring\", \"point_of_no_return_detected\": false, \"current_state\": \"on plate\", \"safety_gear_missing\": []}",
+      "parsed": {
+        "tool_detected": "spatula",
+        "target_object": "pancake",
+        "action_verb": "transferring",
+        "point_of_no_return_detected": false,
+        "current_state": "on plate",
+        "safety_gear_missing": []
+      },
+      "schema_valid": true
+    }
+  ]
+}
