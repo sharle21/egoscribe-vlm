@@ -1,5 +1,10 @@
-torch
+# Adapter-aware checkpoint serving/sanity inference uses the same loader as evaluation.
+# Keep these aligned with requirements-train.txt; saved LoRA adapters require PEFT and the
+# Qwen2.5-VL processor requires the pinned Transformers/Unsloth stack.
+torch==2.11.0
+transformers==5.5.0
+unsloth==2026.8.4
+peft
+eva-decord
 pillow
 pydantic
-opencv-python
-sglang
