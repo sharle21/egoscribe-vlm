@@ -12,3 +12,10 @@ data/converted/
 
 # training outputs
 saved_egoscribe_adapters/
+
+# interview-prep docs — personal, not project documentation
+interview-notes.md
+PROJECT_BIBLE.md
+mock-interview.md
+resume-bullets.md
+story-versions.md
