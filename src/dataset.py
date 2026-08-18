@@ -7,8 +7,8 @@ import json
 
 # The single source of truth for the user prompt. Training (this file) and the eval harness
 # (src/eval/evaluate.py) MUST feed the model the identical prompt, or eval measures a
-# distribution the model was never trained on. serve.py uses a different, richer prompt on
-# purpose (interactive demo); the eval path deliberately does NOT.
+# distribution the model was never trained on. serve.py reuses src.eval.evaluate's loader and
+# generate path, so it feeds this same prompt too.
 USER_PROMPT_TEXT = (
     "Analyze this egocentric video sequence. "
     "Identify the active tool, target object, action verb, "
