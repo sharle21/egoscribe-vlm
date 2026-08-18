@@ -141,4 +141,25 @@ themselves any other way."
 
 ---
 
+## 2026-08-16 — Take-level evaluation changed how I interpret the ablation results
+
+**What happened:** Completed four real QLoRA runs on the same take-disjoint split and evaluated
+them on 110 segments from six held-out takes. A/B/C initially had flat segment metrics; after
+the runs, I added an offline block bootstrap over take IDs and rescored the saved prediction
+dumps. D produced nine malformed outputs, including comma-separated records instead of JSON.
+
+**What I learned:** Segments are not independent examples when they come from the same video
+take. A large segment count can look statistically impressive while representing only a handful
+of independent scenes. I now report take-level intervals and schema validity separately from
+semantic scores. The result is exploratory: C is strongest on the main semantic fields, A is
+close and perfectly schema-valid, and D is a meaningful attention-only ablation but not a clear
+winner.
+
+**Interview answer:** "I initially had 110 segment-level scores, but recognized that the real
+unit was the six held-out takes. I added a block bootstrap over takes and found that the
+intervals were appropriately wide. That changed the claim from 'C wins conclusively' to 'C is
+the strongest candidate in this small exploratory study.'"
+
+---
+
 ## (add entries here as the project progresses)
