@@ -7,7 +7,7 @@ Status legend: `[ ]` todo · `[~]` in progress · `[x]` done
       `~/data/ego-exo4d/takes/` download (21GB, superseded by `downscaled_takes/448`) after
       disk hit 99% full mid-download — freed 37GB (190Mi → 38GB available)
 - [x] Resolve model choice ([ADR-0001](adr/0001-model-selection.md)) — Qwen2.5-VL-7B-Instruct, accepted
-- [ ] Update `serve.py` (SGLang path + `model_path`) from MiMo-VL to Qwen2.5-VL to match ADR-0001
+- [x] Update `serve.py` (SGLang path + `model_path`) from MiMo-VL to Qwen2.5-VL to match ADR-0001
 - [x] Fix label masking bug: pad `labels` with `-100`, not tokenizer pad id (`src/dataset.py`)
 - [x] Switch `train.py` model loading from full BF16 to 4-bit QLoRA via Unsloth (`--strategy` flag implements ADR-0002 + ADR-0003)
 - [x] Add Unsloth + bitsandbytes to `requirements.txt`
@@ -113,7 +113,7 @@ Config/code already validated in Phase 0's smoke test — this phase is running 
 strategies for real, on the curated Ego-Exo4D subset (Phase 1, done).
 - [x] Picked provider: Google Cloud, G2 instance w/ 1x NVIDIA L4 (24GB), paid via $300/90-day
       free-trial credit (upgraded to paid billing to unlock GPU access, no charge yet)
-- [~] Setting up GCP VM: `gcloud compute instances create egoscribe-l4` (G2, L4,
+- [x] Setting up GCP VM: `gcloud compute instances create egoscribe-l4` (G2, L4,
       accelerator-optimized Ubuntu image, 100GB disk) — walking through gcloud CLI
       install/auth/VM creation/SSH. NOTE: G2 cannot boot a Deep Learning VM image; must use an
       accelerator-optimized Ubuntu image (NVIDIA driver + CUDA preinstalled). Full runbook:
@@ -122,27 +122,34 @@ strategies for real, on the curated Ego-Exo4D subset (Phase 1, done).
       `requirements-train.txt` — exact versions confirmed clean across all 4 strategies on the
       Colab smoke test, so the GCP VM doesn't silently pull newer versions that could
       reintroduce a bug we already fixed around.
-- [ ] On the VM: clone repo, `pip install -r requirements-train.txt` — CHECK first whether this
-      conflicts with the accelerator-optimized image's pre-installed torch (matched to its own
-      CUDA build); may need `--no-deps` on torch or to trust the image's preinstalled version
-      instead of reinstalling. Pull curated dataset + video (either re-run `egoexo --uids <30 curated
-      uids>` on the VM, or transfer from local).
-- [ ] Benchmark Strategy A for ~15-20 min — get real steps/sec, extrapolate real time/cost for
-      all 4 strategies before committing to full runs (training-time estimate so far is a rough
-      guess extrapolated from Colab T4, could be off 2x either way)
-- [ ] Run all 4 strategies on the curated subset — same split, seed, steps, batch size
-- [ ] Log cost + wall time per strategy
-- [ ] Save checkpoints + trainable-param counts (already known to differ correctly per strategy)
+- [x] On the VM: clone repo, install pinned training dependencies, and transfer the curated data
+      and video.
+- [x] Benchmark Strategy A on the real L4 and validate the runtime estimate before running the
+      remaining strategies.
+- [x] Run all 4 strategies on the curated subset — same split, seed, steps, batch size
+- [x] Record cloud cost and wall time per strategy — wall times saved (A 2h40m, B 2h27m, C 2h26m,
+      D 2h23m); total actual GCP spend $16.25 from billing (Compute $16.19 + Networking $0.06),
+      within the $300 free credit. ~$1.7–1.9/strategy at list price; $16 all-in incl. overhead.
+- [x] Save checkpoints + trainable-param counts for all four strategies.
 
 ## Phase 4 — Evaluation
-- [ ] Build eval harness (JSON validity, per-field accuracy, PONR F1, safety-gear P/R)
-- [ ] Run all 4 checkpoints through harness on held-out split
-- [ ] Sanity-check `serve.py` inference path against at least one trained checkpoint
+- [x] Build eval harness (JSON validity, per-field accuracy, PONR F1, safety-gear P/R)
+- [x] Add take-level block-bootstrap confidence intervals and offline rescore support
+- [x] Run all 4 checkpoints through harness on held-out split
+- [~] Sanity-check `serve.py` inference path against at least one trained checkpoint — `serve.py`
+      is now an adapter-backed single-example runner reusing `src.eval.evaluate`'s loader,
+      prompt, frame sampling, and schema validation (`--adapter <dir> --index <n>`); code-ready,
+      syntax verified locally. Actual end-to-end GPU run against a checkpoint not done (no local
+      GPU) — run one saved checkpoint on one held-out clip after starting the VM.
 
 ## Phase 5 — Analysis & writeup
-- [ ] Compare strategies: accuracy vs. trainable-param-% vs. $ cost
-- [ ] Write up honest findings (including failures) — feed into [things-i-learned.md](things-i-learned.md)
-- [ ] Finalize README (no "Built with Unsloth" fluff — lead with the research question)
+- [x] Produce the final comparison table using clustered outputs: performance (w/ take-level CIs) vs. trainable-param-% vs. cost ($16.25 total from billing)
+- [x] Decide and document the primary metric and how the six-take limitation affects conclusions
+- [x] Explain D as attention-only broad adaptation and report its lower schema validity
+- [x] Decide how to report `safety_gear_missing`, which has zero positive gold items in this split
+- [x] Write up honest findings (including failures) — see `docs/results_summary.md` and [things-i-learned.md](things-i-learned.md)
+- [x] Finalize README (`README.md`) — leads with the research question, reports overlapping CIs
+      honestly, no hype.
 
 ## Open questions (resolved, kept for record)
 - [x] MiMo-VL vs Qwen2.5-VL — Qwen2.5-VL, see ADR-0001 (Accepted)
