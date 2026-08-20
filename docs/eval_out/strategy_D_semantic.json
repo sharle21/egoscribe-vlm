@@ -1,0 +1,22 @@
+{
+  "semantic_mean": {
+    "target_object": 0.312,
+    "action_verb": 0.287,
+    "current_state": 0.356
+  },
+  "semantic_ci95": {
+    "target_object": [
+      0.235,
+      0.45
+    ],
+    "action_verb": [
+      0.1364,
+      0.4224
+    ],
+    "current_state": [
+      0.2768,
+      0.4451
+    ]
+  },
+  "judge_model": "claude-haiku-4-5-20251001"
+}
