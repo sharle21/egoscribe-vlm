@@ -1,11 +1,13 @@
 # train.py
 import argparse
+import math
 import random
 import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from unsloth import FastVisionModel, is_bfloat16_supported
 from accelerate import Accelerator
+from transformers import get_cosine_schedule_with_warmup
 from tqdm import tqdm
 
 # Import our custom pipeline from our directory layout
@@ -66,9 +68,13 @@ def parse_args():
         "--video_dir", type=str, default="data/samples/",
         help="Root dir the video_file paths in --annotations are resolved against.",
     )
-    parser.add_argument("--epochs", type=int, default=3)
+    parser.add_argument("--epochs", type=int, default=6)
     parser.add_argument("--batch_size", type=int, default=2)
-    parser.add_argument("--lr", type=float, default=2e-5)
+    # 2e-4 is the standard QLoRA/LoRA LR (QLoRA paper, Unsloth defaults). The original 2e-5 is a
+    # full-fine-tuning LR — 10x too low for a 0.5%-of-params adapter, which left the model badly
+    # undertrained (near-zero token-F1, ~0.35 semantic). See docs/results_summary.md.
+    parser.add_argument("--lr", type=float, default=2e-4)
+    parser.add_argument("--warmup_ratio", type=float, default=0.05)
     parser.add_argument("--num_frames", type=int, default=8, help="Lower for small-VRAM smoke tests")
     parser.add_argument("--seed", type=int, default=3407, help="Seeds python/numpy/torch + DataLoader shuffle for reproducibility.")
     parser.add_argument(
@@ -183,9 +189,21 @@ def main():
     # 5. Optimization & Learning Schedule setup
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
 
+    # Warmup + cosine-decay LR schedule (the original run had no scheduler — constant LR).
+    # num_training_steps is in OPTIMIZER steps, not batches, so divide by grad-accum.
+    steps_per_epoch = math.ceil(len(train_dataloader) / accelerator.gradient_accumulation_steps)
+    max_train_steps = args.epochs * steps_per_epoch
+    if args.max_steps > 0:
+        max_train_steps = min(max_train_steps, args.max_steps)
+    lr_scheduler = get_cosine_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=int(args.warmup_ratio * max_train_steps),
+        num_training_steps=max_train_steps,
+    )
+
     # 6. Prepare Everything via HF Accelerate
-    model, optimizer, train_dataloader = accelerator.prepare(
-        model, optimizer, train_dataloader
+    model, optimizer, train_dataloader, lr_scheduler = accelerator.prepare(
+        model, optimizer, train_dataloader, lr_scheduler
     )
 
     # 7. The Core Training Loop — identical across strategies A-D by construction
@@ -209,11 +227,12 @@ def main():
 
                 accelerator.backward(loss)
                 optimizer.step()
+                lr_scheduler.step()
                 optimizer.zero_grad()
 
                 total_loss += loss.item()
                 steps_this_epoch += 1
-                progress_bar.set_postfix({"loss": loss.item()})
+                progress_bar.set_postfix({"loss": loss.item(), "lr": lr_scheduler.get_last_lr()[0]})
 
             # Count an optimizer step only when accumulation actually stepped, so --max_steps
             # means real updates regardless of gradient_accumulation_steps.
