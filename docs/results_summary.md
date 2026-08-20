@@ -14,8 +14,9 @@
 ## Strategy comparison
 
 Values are token-F1 point estimates with the 95% take-level bootstrap interval in brackets.
-Tool detection is a secondary reliability signal; the three primary semantic fields are
-target-object, action-verb, and current-state.
+Token-F1 is the strict *lexical* floor — a fairer semantic rescore of the free-text fields
+follows in the next section. Tool detection is a secondary reliability signal; the three primary
+semantic fields are target-object, action-verb, and current-state.
 
 | Strategy | Adaptation | Params | Valid JSON | Tool F1 | Target F1 | Action F1 | State F1 | PONR F1 |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -24,8 +25,45 @@ target-object, action-verb, and current-state.
 | C | Language only, attn + MLP | 40.4M (0.48%) | 110/110 | 0.741 [0.65, 0.86] | 0.323 [0.22, 0.41] | 0.251 [0.17, 0.34] | 0.191 [0.14, 0.25] | 0.462 [0.00, 0.62] |
 | D | Vision + language, attn only | 14.0M (0.17%) | 101/110 | 0.710 [0.58, 0.84] | 0.284 [0.20, 0.38] | 0.186 [0.10, 0.27] | 0.125 [0.09, 0.19] | 0.308 [0.00, 0.67] |
 
-D's semantic scores are computed over its 101 schema-valid predictions; its nine invalid outputs
-are counted only in the validity rate, never silently treated as correct.
+D's scores are computed over its 101 schema-valid predictions; its nine invalid outputs are
+counted only in the validity rate, never silently treated as correct.
+
+## Semantic (LLM-judge) rescore of the free-text fields
+
+Token-F1 measures *lexical* overlap. These fields are generative and paraphrastic — gold
+"beating the eggs" vs pred "whisking" is correct but shares zero tokens, and a concise pred is
+penalized against verbose LLM-written gold. So token-F1 systematically *under*-measures true
+agreement. To separate "bad model" from "harsh metric", each free-text field was rescored with a
+Claude Haiku 4.5 judge that rates prediction-vs-gold agreement in *meaning* (correct=1.0 /
+partial=0.5 / wrong=0.0). The judge sees only the gold and predicted text, so it measures the
+same quantity token-F1 does (agreement with the gold label), just semantically. Offline from the
+saved dumps, no retraining (`src/eval/semantic_judge.py`, ~$0.42).
+
+Semantic mean with 95% take-level bootstrap interval:
+
+| Strategy | Target | Action | State |
+|---|---|---|---|
+| A | 0.336 [0.25, 0.44] | 0.364 [0.22, 0.50] | 0.405 [0.32, 0.51] |
+| B | 0.305 [0.23, 0.39] | 0.291 [0.17, 0.40] | 0.282 [0.21, 0.38] |
+| C | 0.350 [0.24, 0.47] | 0.345 [0.22, 0.47] | 0.391 [0.30, 0.50] |
+| D | 0.312 [0.23, 0.45] | 0.287 [0.14, 0.42] | 0.356 [0.28, 0.45] |
+
+Two things this establishes:
+
+- **The model works; token-F1 was underselling it.** The gap is largest on `current_state`
+  (token-F1 ~0.18 → semantic ~0.40, ~2.2x) and `action_verb` (~0.24 → ~0.36) — exactly the
+  paraphrase-heavy fields. The honest absolute level is ~0.35–0.40 semantic agreement: *modest
+  but clearly functional*, around the "partial" mark on average, not the near-broken 0.18 that
+  lexical scoring implied. It is **not** inflated to "strong" — the model is genuinely middling.
+- **The comparison is unchanged — no manufactured winner.** A and C remain statistically
+  indistinguishable (overlapping intervals on all three fields), B remains weakest, and every
+  interval still overlaps. The semantic metric corrected the *absolute* picture without inventing
+  a *ranking*, which is the honesty check the fix has to pass.
+
+It also *sharpens* the main finding: `current_state` — the most language-loaded field — is both
+where token-F1 undersold most and where vision-only (B, 0.282) trails A/C (~0.40) most clearly.
+Adapting the language side helps *describe state*, which is precisely where a vision-only adapter
+falls short.
 
 ## What the intervals actually license
 
@@ -39,7 +77,8 @@ point estimates alone would overclaim. Specifically:
 - **Vision-only (B) is the one strategy that trends clearly worst on the language-shaped fields.**
   On action-verb, B's interval [0.06, 0.16] sits almost entirely below C's [0.17, 0.34] and below
   A's [0.14, 0.33]; on current-state B is similarly low. This is the closest thing to a
-  separation the study produces.
+  separation the study produces, and the semantic rescore above shows the same ordering (B state
+  0.282 vs A/C ~0.40), so it is not a token-matching artifact.
 - **Point-of-no-return F1 is uninformative.** Every interval spans roughly [0.0, 0.65] on only
   five positive examples across six takes. No PONR ranking claim is supportable.
 - **Tool detection does not separate the strategies** — all four intervals overlap.
@@ -55,7 +94,10 @@ compensating win.
 
 The efficiency framing is where the finding is strongest and least noise-sensitive: C reaches
 A-equal quality with a strictly smaller, language-scoped adapter. The per-field *ranking* between
-A and C is not resolvable at this sample size and is not claimed.
+A and C is not resolvable at this sample size and is not claimed. Both the strict lexical (token-F1)
+and the semantic (LLM-judge) metrics agree on this picture, so the conclusion does not depend on
+the choice of metric — only the absolute scores do (the semantic rescore roughly doubles
+`current_state`, confirming the model is functional rather than broken).
 
 This is an exploratory result over six held-out takes, not a statistically definitive ranking.
 
